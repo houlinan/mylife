@@ -1,5 +1,7 @@
 package cn.houlinan.mylife.constant;
 
+import java.io.File;
+
 /**
  * DESC：
  * CREATED BY ：@hou.linan
@@ -8,7 +10,10 @@ package cn.houlinan.mylife.constant;
  */
 public class TeamConstant {
 
-    public static final String TEAM_PICS_ROOT_PATH = "C:\\\\mylifeDatas\\teamPics\\";
+
+    public static final String TEAM_PICS_ROOT_PATH = "C:" + File.separator + "mylifeDatas" + File.separator + "teamPics" + File.separator;
+
+
 
 
 }

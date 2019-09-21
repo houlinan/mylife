@@ -55,8 +55,8 @@ public class UserController {
     })
     public HHJSONResult registUser(@RequestParam(name = "userName") String userName,
                                    @RequestParam(name = "passWord") String passWord,
-                                   @RequestParam(name = "email") String email,
-                                   @RequestParam(name = "mobile") Long mobile
+                                   @RequestParam(name = "email", required = false) String email,
+                                   @RequestParam(name = "mobile", required = false) Long mobile
                                    ) throws Exception {
 
         User user = userRepository.findUserByUserName(userName);

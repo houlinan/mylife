@@ -11,4 +11,5 @@ public interface UserRepository extends BaseJpaRepository<User, Serializable> {
 
     User findUserByUserName(String userName);
 
+    User findUserById(String id);
 }

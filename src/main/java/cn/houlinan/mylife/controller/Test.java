@@ -1,4 +1,4 @@
-package cn.houlinan.mylife.constant;
+package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.utils.RedisOperator;
 import org.springframework.beans.factory.annotation.Autowired;

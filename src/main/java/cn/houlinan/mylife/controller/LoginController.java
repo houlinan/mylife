@@ -5,6 +5,7 @@ import cn.houlinan.mylife.constant.UserConstant;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.service.UserService;
+import cn.houlinan.mylife.utils.CookieUtils;
 import cn.houlinan.mylife.utils.HHJSONResult;
 import cn.houlinan.mylife.utils.MD5Utils;
 import cn.houlinan.mylife.utils.RedisOperator;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.UUID;
 
@@ -57,10 +60,12 @@ public class LoginController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "用户名称", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
             @ApiImplicitParam(name = "passWord", value = "用户密码", required = true, dataType = "String", paramType = "query", defaultValue = "admim"),
+
     })
     @ApiOperation(value = "用户登陆", notes = "用户登陆接口")
-    public HHJSONResult login(@RequestParam("userName") String userName, @RequestParam("passWord") String passWord) throws Exception {
-
+    public HHJSONResult login(@RequestParam("userName") String userName, @RequestParam("passWord") String passWord ,
+                              HttpServletResponse res
+    ) throws Exception {
 //        String userName = user.getUserName();
 //        String passWord = user.getPassWord() ;
         log.info("用户尝试登陆， 用户名为：{} ， 用户的密码为：{}", userName, passWord);
@@ -88,6 +93,10 @@ public class LoginController {
         //设置UserToken
         UserVO usersVO = setUserRedisSessionToken(currUser);
 
+        String userToken = usersVO.getUserToken() ;
+        CookieUtils.writeCookie(res,UserConstant.USER_TOKEN_NAME,userToken);
+
+
         log.info("用户【{}】登陆成功，已经跳转到响应页面", userName);
         return HHJSONResult.ok(usersVO);
     }
@@ -105,6 +114,9 @@ public class LoginController {
 
         //此处使用 ‘ ： ’ 可以在redis中将数据分类保存
         redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+user.getId() , uniqueToken , 1000*60*30 );
+        redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+uniqueToken , user.getId() , 1000*60*30 );
+        //将用户的token放入session中
+
 
         UserVO usersVO = new UserVO();
         BeanUtils.copyProperties(user, usersVO);

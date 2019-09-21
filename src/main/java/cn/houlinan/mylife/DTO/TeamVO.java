@@ -1,66 +1,45 @@
-package cn.houlinan.mylife.entity;
+package cn.houlinan.mylife.DTO;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
 
 
 /**
- * DESC：小组实体类
+ * DESC：
  * CREATED BY ：@hou.linan
- * CREATED DATE ：2019/9/13
- * Time : 5:50
+ * CREATED DATE ：2019/9/21
+ * Time : 14:39
  */
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "team", indexes = {
-        @Index(name = "id", columnList = "id")
-})
-@Builder
-@Entity
-public class Team extends BaseEntity{
+@AllArgsConstructor
+public class TeamVO {
 
 
     private static final long serialVersionUID = 5458698096863590604L;
 
     @NotBlank(message = "小组名称必传")
     @ApiModelProperty(value = "小组名称" , name = "teamName" , example = "这是一个帅气的小组")
-    @Column(name = "teamname", length = 100)
     private String teamName ;
 
+    @NotBlank(message = "小组密码必传")
     @ApiModelProperty(value = "小组密码" , name = "teamPassword" , example = "123456")
-    @Column(name = "teampassword", length = 100)
     private String teamPassword ;
 
+    @Email
     @ApiModelProperty(value = "小组邮箱" , name = "teamEmail" , example = "team@qq.com")
-    @Column(name = "teamemail", length = 100)
     private String teamEmail ;
 
     @ApiModelProperty(value = "是否发送所有成员" , name = "isSendAllUser" , example = "1")
-    @Column(name = "issendalluser", length = 2 ,columnDefinition = "int(2) default 0")
     private int isSendAllUser ;
 
     @ApiModelProperty(value = "小组册路径" , name = "picspath" , example = "c://pic//team//abc//hiddenPic//")
-    @Column(name = "picspath")
     private String picsPath ;
 
     @ApiModelProperty(value = "管理员账号id" , name = "adminuserid" , example = "team@qq.com")
-    @Column(name = "adminuserid", length = 100)
     private String adminUserId ;
-
-
-//    @ManyToOne
-//    @JoinColumn(foreignKey = @ForeignKey(name = "none"))
-//    @ApiModelProperty(value = "类型信息" , name = "type" , example = "1" ,required = true)
-//    private Type type ;
 }

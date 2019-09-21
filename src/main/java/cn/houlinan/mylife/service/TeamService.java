@@ -67,10 +67,13 @@ public class TeamService {
     public Team createTeam(Team team , User user){
 
         if(CMyString.isEmpty(team.getId()) || "0".equals(team.getId())) {
-            team.setId(sid.nextShort());
+            String uid = sid.nextShort() ;
+            team.setId(uid);
             team.setPicsPath(TeamConstant.TEAM_PICS_ROOT_PATH + team.getId());
             team.setCrTime(new Date());
             team.setUpdateTime(new Date());
+            team.setAdminUserId(user.getId());
+            team.setTeamid(uid);
         }
         teamRepository.save(team);
 
