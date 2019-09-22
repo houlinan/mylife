@@ -48,7 +48,7 @@ public class TeamController {
     })
     @ResponseBody
     public HHJSONResult createTeam(
-                    TeamVO teamVO , User user
+            TeamVO teamVO , User user
 //            @RequestParam(name = "teamName",required = false)  String teamName,
 //                                   @RequestParam(name = "teamPassword",required = false ) @NotBlank(message = "小组密码必传") String teamPassword,
 //                                   @RequestParam(name = "teamEmail" , required = false) String teamEmail,
@@ -99,7 +99,7 @@ public class TeamController {
             @ApiImplicitParam(name = "userPassword", value = "当前用户密码", required = true, dataType = "String", paramType="query", defaultValue = "admin")
     })
     public HHJSONResult userCancelTeam(@RequestParam(name = "userPassword")String userPassword ,
-                                     User user  ){
+                                       User user  ){
 
         String password = user.getPassword() ;
         if(!password.equals(userPassword)) return HHJSONResult.errorMsg("您的密码错误。请重试");
