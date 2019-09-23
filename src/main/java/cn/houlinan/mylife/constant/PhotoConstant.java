@@ -11,5 +11,7 @@ import java.io.File;
 public class PhotoConstant {
 
 
-    private static final String PhotoAlbum_Root_path = "C:" + File.separator + "mylifeDatas" + File.separator + "userPhotoAlbum" + File.separator ;
+    public static final String PHOTOALBUM_ROOT_PATH = "C:" + File.separator + "mylifeDatas" + File.separator + "userPhotoAlbum" + File.separator ;
+
+    public static final String FILE_NAME_PREFIX = "UP" ;
 }

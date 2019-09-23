@@ -7,4 +7,6 @@ import java.io.Serializable;
 
 public interface PhotoAlbumRepository extends BaseJpaRepository<PhotoAlbum, Serializable> {
 
+    PhotoAlbum findPhotoAlbumById(String id);
+
 }

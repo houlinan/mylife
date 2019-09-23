@@ -38,7 +38,7 @@ public class Photo extends BaseEntity{
 
     @ApiModelProperty(value = "图片大小" , name = "fileSize" , example = "1123123")
     @Column(name = "filesize", length = 20 ,columnDefinition = "int(20) default 0")
-    private Integer fileSize ;
+    private Long fileSize ;
 
     @ApiModelProperty(value = "所属用户id" , name = "fromUserId" , example = "sdadsad-dsada-dsa")
     @Column(name = "fromuserid", length = 50)
@@ -51,5 +51,10 @@ public class Photo extends BaseEntity{
     @ApiModelProperty(value = "文件路径" , name = "filePath" , example = "sdadsad-dsada-dsa")
     @Column(name = "filepath", length = 50)
     private String filePath ;
+
+    @ApiModelProperty(value = "图片上传日期" , name = "uploadTime" , example = "2019/05/02")
+    @Column(name = "uploadTime", length = 50)
+    private String uploadTime ;
+
 
 }
