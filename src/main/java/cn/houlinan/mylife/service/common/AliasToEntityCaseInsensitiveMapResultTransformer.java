@@ -1,9 +1,9 @@
 package cn.houlinan.mylife.service.common;
 
 
-import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.hibernate.transform.AliasedTupleSubsetResultTransformer;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -27,7 +27,7 @@ public class AliasToEntityCaseInsensitiveMapResultTransformer extends AliasedTup
     @SuppressWarnings("unchecked")
     @Override
     public Object transformTuple(Object[] tuple, String[] aliases) {
-        Map<String, Object> result = new CaseInsensitiveMap();
+        Map<String, Object> result = new HashMap<>();
         for (int i = 0; i < tuple.length; i++) {
             String alias = aliases[i];
 //			System.out.println(alias+"==="+tuple[i]);

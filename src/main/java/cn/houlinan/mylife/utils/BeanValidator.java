@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.sf.json.JSONObject;
-import org.apache.commons.collections.MapUtils;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -70,7 +69,7 @@ public class BeanValidator {
     //验证参数，后抛出异常，并返回给前端
     public static void check(Object Param) throws ParamException{
         Map<String, String> map = validateObject(Param);
-        if(MapUtils.isNotEmpty(map)){
+        if(map.size() != 0){
             JSONObject result = JSONObject.fromObject(map);
             throw new ParamException(result.toString()) ;
         }
