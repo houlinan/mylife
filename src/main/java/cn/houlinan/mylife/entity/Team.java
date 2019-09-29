@@ -51,7 +51,7 @@ public class Team extends BaseEntity{
     private int isSendAllUser ;
 
     @ApiModelProperty(value = "小组册路径" , name = "picspath" , example = "c://pic//team//abc//hiddenPic//")
-    @Column(name = "picspath")
+    @Column(name = "picspath"  ,length = 500)
     private String picsPath ;
 
     @ApiModelProperty(value = "管理员账号id" , name = "adminuserid" , example = "team@qq.com")

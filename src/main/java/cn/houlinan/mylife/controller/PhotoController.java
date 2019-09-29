@@ -89,7 +89,7 @@ public class PhotoController {
         PhotoAlbum photoAlbumById = photoAlbumRepository.findPhotoAlbumById(albumId);
         if(photoAlbumById == null) return HHJSONResult.errorMsg("没有找到该相册的信息");
 
-        if(photoAlbumById.getTeamid() != user.getTeamid()) return HHJSONResult.errorMsg("上传的非您小组相册");
+        if(!photoAlbumById.getTeamid().equals(user.getTeamid())) return HHJSONResult.errorMsg("上传的非您小组相册");
 
 
         //  上传文件

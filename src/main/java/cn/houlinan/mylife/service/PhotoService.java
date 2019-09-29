@@ -72,7 +72,7 @@ public class PhotoService {
                     log.info("finalFilePath ==" + finalFilePath);
 
                     String currPhoto600Path = getNewFileName(fileName, true);
-
+                    currPhoto600Path = fileSpace + File.separator + photoAlbumId + File.separator +currPhoto600Path;
 
                     //处理文件
                     File faceFile = new File(finalFilePath);
@@ -178,11 +178,13 @@ public class PhotoService {
             /** 压缩之后临时存放位置 */
             FileOutputStream out = new FileOutputStream(new File(newFilePath));
 
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
             JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(tag);
             /** 压缩质量 */
             jep.setQuality(quality, true);
-            encoder.encode(tag, jep);
+//            encoder.encode(tag, jep);
+            ImageIO.write(tag, "jpeg", out);
+
             out.close();
 
         } catch (FileNotFoundException e) {

@@ -49,7 +49,7 @@ public class User extends BaseEntity{
     private Team team ;
 
     @ApiModelProperty(value = "隐藏相册路径" , name = "hiddenpicspath" , example = "c://pic//user//abc//hiddenPic//")
-    @Column(name = "hiddenpicspath")
+    @Column(name = "hiddenpicspath", length = 500)
     private String hiddenPicsPath ;
 
     /*

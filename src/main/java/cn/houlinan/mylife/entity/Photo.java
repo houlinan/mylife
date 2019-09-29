@@ -45,11 +45,11 @@ public class Photo extends BaseEntity{
     private String fromUserId ;
 
     @ApiModelProperty(value = "文件缩略图" , name = "file600Path" , example = "C://xxxx")
-    @Column(name = "file600path", length = 50)
+    @Column(name = "file600path", length = 500)
     private String file600Path ;
 
     @ApiModelProperty(value = "文件路径" , name = "filePath" , example = "sdadsad-dsada-dsa")
-    @Column(name = "filepath", length = 50)
+    @Column(name = "filepath", length = 500)
     private String filePath ;
 
     @ApiModelProperty(value = "图片上传日期" , name = "uploadTime" , example = "2019/05/02")
