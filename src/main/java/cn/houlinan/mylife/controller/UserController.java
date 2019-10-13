@@ -47,10 +47,10 @@ public class UserController {
      * @return: com.trs.wxnew.utils.WXJSONResult
      */
     @ApiOperation(value = "用户注册", notes = "用户注册的接口")
-    @PostMapping("/regist")
+    @RequestMapping("/regist")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "用户登陆名称", required = false, dataType = "String", paramType = "query", defaultValue = "admin"),
-            @ApiImplicitParam(name = "passWord", value = "用户密码", required = false, dataType = "String", paramType = "query", defaultValue = "admim"),
+            @ApiImplicitParam(name = "passWord", value = "用户密码", required = false, dataType = "String", paramType = "query", defaultValue = "admin"),
             @ApiImplicitParam(name = "email", value = "用户邮箱", required = false, dataType = "String", paramType = "query", defaultValue = "houlinan@vip.qq.com"),
             @ApiImplicitParam(name = "mobile", value = "用户手机", required = false, dataType = "String", paramType = "query", defaultValue = "17625997779"),
     })
@@ -58,6 +58,7 @@ public class UserController {
                                    @RequestParam(name = "passWord" ,required = false) String passWord,
                                    @RequestParam(name = "email", required = false) String email,
                                    @RequestParam(name = "mobile", required = false) Long mobile
+//                                  , @RequestParam(name = "openId", required = false) String openId
                                    ) throws Exception {
 
         if(CMyString.isEmpty(userName)) return HHJSONResult.errorMsg("请输入用户名称");

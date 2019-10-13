@@ -41,4 +41,13 @@ public class PhotoAlbumVO extends BaseEntity{
     @ApiModelProperty(value = "是否隐藏" , name = "isdisplay" , example = "1")
     private Integer isDisplay ;
 
+    @ApiModelProperty(value = "封面图片路径" , name = "coverPicPath" , example = "1")
+    private String coverPicPath;
+
+    @ApiModelProperty(value = "相册简介" , name = "albumDesc" , example = "1")
+    private String albumDesc;
+
+    @ApiModelProperty(value = "相册标签" , name = "albumLabel" , example = "1")
+    private String albumLabel;
+
 }

@@ -56,5 +56,13 @@ public class Photo extends BaseEntity{
     @Column(name = "uploadTime", length = 50)
     private String uploadTime ;
 
+    @ApiModelProperty(value = "图片600访问地址" , name = "file600Address" , example = "2019/05/02")
+    @Column(name = "file600address", length = 50)
+    private String file600Address ;
+
+    @ApiModelProperty(value = "图片访问地址" , name = "fileAddress" , example = "2019/05/02")
+    @Column(name = "fileaddress", length = 50)
+    private String fileAddress ;
+
 
 }

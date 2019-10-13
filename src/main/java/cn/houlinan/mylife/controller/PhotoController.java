@@ -1,13 +1,16 @@
 package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.DTO.PhotoAlbumVO;
+import cn.houlinan.mylife.DTO.PhotoVOResult;
 import cn.houlinan.mylife.entity.Photo;
 import cn.houlinan.mylife.entity.PhotoAlbum;
 import cn.houlinan.mylife.entity.Team;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.PhotoAlbumRepository;
+import cn.houlinan.mylife.entity.primary.repository.PhotoRepository;
 import cn.houlinan.mylife.service.PhotoAlbumService;
 import cn.houlinan.mylife.service.PhotoService;
+import cn.houlinan.mylife.service.common.MyPage;
 import cn.houlinan.mylife.utils.BeanValidator;
 import cn.houlinan.mylife.utils.CMyString;
 import cn.houlinan.mylife.utils.HHJSONResult;
@@ -23,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.xml.bind.ValidationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -45,6 +51,9 @@ public class PhotoController {
 
     @Autowired
     PhotoService photoService;
+
+    @Autowired
+    PhotoRepository photoRepository;
 
     @ApiOperation(value = "创建相册", notes = "创建相册的接口")
     @PostMapping("/createPhotoAlbum")
@@ -96,12 +105,48 @@ public class PhotoController {
         for(int a = 0 ;a <files.length ;a ++ ){
             MultipartFile file = files[a];
             if(!ObjectUtils.isEmpty(file)){
-                Photo photo = photoService.uploadPic(file, photoAlbumById);
+
+                Photo photo = photoService.uploadPic(file , photoAlbumById, false );
+                photoRepository.save(photo);
             }
         }
 
         return HHJSONResult.ok() ;
     }
+
+
+    @ApiOperation(value = "根据用户id获取用户所有相册", notes = "根据用户id获取用户所有相册的接口")
+    @RequestMapping("/getAllAlbumByUserId")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户id", required = false, dataType = "String", paramType="query", defaultValue = "dsadadas"),
+    })
+    @ResponseBody
+    public HHJSONResult getAllAlbumByUserId(User user, @RequestParam(value = "userId", required = false) String userId){
+        if(user == null ) return HHJSONResult.errorMsg("请登录");
+        return HHJSONResult.ok(photoAlbumService.findAppAlubmByUser(user.getId()));
+    }
+
+
+    @ApiOperation(value = "根据用户id获取用户所有相册", notes = "根据用户id获取用户所有相册的接口")
+    @RequestMapping("/findAppAlubmByUser")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "albumId", value = "相册id", required = false, dataType = "String", paramType="query", defaultValue = "dsadadas"),
+    })
+    @ResponseBody
+    public HHJSONResult findAppAlubmByUser(User user ,
+                                           @RequestParam(value = "albumId" , required = false)String albumId,
+                                           @RequestParam(value = "pageSize",required = false ,defaultValue = "0")int pageSize,
+                                           @RequestParam(value = "pageNum",required = false ,defaultValue = "9")int pageNum
+                                           )throws Exception{
+
+        if(CMyString.isEmpty(albumId)) return HHJSONResult.errorMsg("传入相册id为空");
+
+        MyPage<PhotoVOResult> photoByAlbumId = photoService.findPhotoByAlbumId(user, albumId, pageSize, pageNum);
+
+        return HHJSONResult.ok(photoByAlbumId);
+    }
+
+
 
 
 }

@@ -1,5 +1,6 @@
 package cn.houlinan.mylife.service;
 
+import cn.houlinan.mylife.DTO.PhotoAlbumVO;
 import cn.houlinan.mylife.constant.PhotoConstant;
 import cn.houlinan.mylife.entity.PhotoAlbum;
 import cn.houlinan.mylife.entity.Team;
@@ -11,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.rmi.server.UID;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * DESC：
@@ -37,11 +40,24 @@ public class PhotoAlbumService {
             photoAlbum.setId(sidStr);
             photoAlbum.setTeamid(user.getTeamid());
             photoAlbum.setPath(PhotoConstant.PHOTOALBUM_ROOT_PATH + sidStr);
+            photoAlbum.setFromUserId(user.getId());
         }
 
         photoAlbumRepository.save(photoAlbum);
 
         return photoAlbum ;
+    }
+
+    public List<PhotoAlbum> findAppAlubmByUser(String userId){
+        List<PhotoAlbum> findResult = photoAlbumRepository.findPhotoAlbumsByFromUserId(userId);
+
+        findResult.forEach( e -> {
+            e.setPassword("");
+            e.setFromUserId("");
+            e.setPath("");
+//            e.setAlbumLabel(Arrays.asList(e.getAlbumLabel().split(",")).toString());
+        });
+        return findResult ;
     }
 
 

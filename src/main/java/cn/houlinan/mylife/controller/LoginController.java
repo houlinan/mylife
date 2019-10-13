@@ -17,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,14 +53,14 @@ public class LoginController {
      * @param: [user]
      * @return: com.trs.wxnew.utils.WXJSONResult
      */
-    @PostMapping("/login")
+    @RequestMapping("/login")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "用户名称", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
             @ApiImplicitParam(name = "passWord", value = "用户密码", required = true, dataType = "String", paramType = "query", defaultValue = "admim"),
 
     })
     @ApiOperation(value = "用户登陆", notes = "用户登陆接口")
-    public HHJSONResult login(@RequestParam("userName") String userName, @RequestParam("passWord") String passWord ,
+    public HHJSONResult login(@RequestParam(value = "userName",required = false) String userName, @RequestParam(value = "passWord" , required = false ) String passWord ,
                               HttpServletResponse res
     ) throws Exception {
 //        String userName = user.getUserName();

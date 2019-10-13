@@ -48,4 +48,16 @@ public class PhotoAlbum extends BaseEntity{
     @Column(name = "isdisplay", length = 2,columnDefinition = "int(2) default 0")
     private Integer isDisplay ;
 
+
+    @ApiModelProperty(value = "封面图片路径" , name = "coverPicPath" , example = "1")
+    @Column(name = "coverpicpath", length = 200 )
+    private String coverPicPath;
+
+    @ApiModelProperty(value = "相册简介" , name = "albumDesc" , example = "1")
+    @Column(name = "albumdesc", length = 500 )
+    private String albumDesc;
+
+    @ApiModelProperty(value = "相册标签" , name = "albumLabel" , example = "1")
+    @Column(name = "albumlabel", length = 500 )
+    private String albumLabel;
 }

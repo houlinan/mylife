@@ -1,17 +1,25 @@
 package cn.houlinan.mylife.service;
 
+import cn.houlinan.mylife.DTO.PhotoVOResult;
 import cn.houlinan.mylife.constant.PhotoConstant;
+import cn.houlinan.mylife.entity.Note;
 import cn.houlinan.mylife.entity.Photo;
 import cn.houlinan.mylife.entity.PhotoAlbum;
+import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.PhotoRepository;
+import cn.houlinan.mylife.service.common.MyPage;
+import cn.houlinan.mylife.service.common.PrimaryBaseService;
 import cn.houlinan.mylife.utils.DateUtil;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
+import com.google.common.collect.Maps;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +28,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * DESC：
@@ -38,6 +48,13 @@ public class PhotoService {
     @Autowired
     PhotoRepository photoRepository;
 
+    @Autowired
+    PrimaryBaseService primaryBaseService;
+
+
+    @Value("${upload.img.https.root.address}")
+    private String rootAddress ;
+
     /**
      * DESC: 上传图片工具类 for wx客户端
      *
@@ -46,17 +63,78 @@ public class PhotoService {
      * @param: [files, uploadPathDB, waterMsg]
      * @return: java.lang.String
      */
-    public Photo uploadPic(MultipartFile files, PhotoAlbum photoAlbum) {
 
-        //保存文件的命名空间
-        String fileSpace = photoAlbum.getPath();
-        String photoAlbumId = photoAlbum.getId();
+    public Photo uploadPic(MultipartFile files, PhotoAlbum photoAlbum, boolean onlySaveZipFile) {
+        return uploadPic(files, photoAlbum.getPath(), photoAlbum.getId(),
+                photoAlbum.getFromUserId(), photoAlbum.getTeamid(), onlySaveZipFile);
+    }
 
-//        log.info("文件大小为：{}" + files.length);
+    public Photo uploadPic(MultipartFile files, String path, String photoAlbumId,
+                           String fromUserId, String teamId, boolean onlySaveZipFile
+//                           PhotoAlbum photoAlbum
+    ) {
+
+
+        String uploadTime = DateUtil.format(DateUtil.now(), "yyyy/MM/dd");
+
+        String finalPath = path + File.separator + photoAlbumId + File.separator;
+
+        String fileAddress = finalPath.replace("C:\\mylifeDatas\\",rootAddress ) ;
+
+        String finalFileName = saveFileToPath(files, finalPath);
+
+        //设置文件最终路径
+        String finalFilePath = finalPath + finalFileName;
+
+
+        String currPhoto600Path = getNewFileName(finalFilePath, true);
+        currPhoto600Path = finalPath + currPhoto600Path;
+
+
+        String file600Address = currPhoto600Path.replace("C:\\mylifeDatas\\",rootAddress ) ;
+
+        //处理文件
+        File faceFile = new File(finalFilePath);
+
+        if (faceFile.getParentFile() != null || !faceFile.getParentFile().isDirectory()) {
+            faceFile.getParentFile().mkdirs();
+        }
+
+        //压缩文件
+        Long fileSize = zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
+//                    //添加水印
+//                    addWaterMark(finalFilePath, finalFilePath, waterMsg);
+
+
+        Photo photo = Photo.builder()
+                .originalName(files.getOriginalFilename())
+                .PicMLName(finalFileName)
+                .filePath(finalFilePath)
+                .fromPhotoAlbumId(photoAlbumId)
+                .fromUserId(fromUserId)
+                .uploadTime(uploadTime)
+                .fileSize(fileSize)
+                .file600Path(currPhoto600Path)
+                .file600Address(file600Address)
+                .fileAddress(fileAddress)
+                .build();
+
+        photo.setId(sid.nextShort());
+        photo.setCrTime(new Date());
+        photo.setTeamid(teamId);
+//                    photoRepository.save(photo);
+        if (onlySaveZipFile) {
+            File file = new File(finalFilePath);
+            if (file.exists()) file.delete();
+        }
+        return photo;
+
+    }
+
+    public String saveFileToPath(MultipartFile files, String path) {
 
         FileOutputStream fileOutputStream = null;
         InputStream inputStream = null;
-//        log.info("文件大小 = {} ， 文件的长度为 {}" ,files ,files.length );
         try {
             if (files != null) {
 
@@ -64,15 +142,10 @@ public class PhotoService {
                 String newFileName = getNewFileName(fileName, false);
                 if (!StringUtils.isEmpty(fileName)) {
 
-                    log.info("用户传入的文件名称为{}", fileName);
-                    String uploadTime = DateUtil.format(DateUtil.now(), "yyyy/MM/dd");
-
                     //设置文件最终路径
-                    String finalFilePath = fileSpace + File.separator + photoAlbumId + File.separator + newFileName;
+                    String finalFilePath = path + newFileName;
                     log.info("finalFilePath ==" + finalFilePath);
 
-                    String currPhoto600Path = getNewFileName(fileName, true);
-                    currPhoto600Path = fileSpace + File.separator + photoAlbumId + File.separator +currPhoto600Path;
 
                     //处理文件
                     File faceFile = new File(finalFilePath);
@@ -88,30 +161,7 @@ public class PhotoService {
                     //重要！重要！重要！
                     //将文件保存到本地
                     IOUtils.copy(inputStream, fileOutputStream);
-                    //压缩文件
-                    Long fileSize = zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
-//                    //添加水印
-//                    addWaterMark(finalFilePath, finalFilePath, waterMsg);
-
-                    log.info("文件大小为：{}" + inputStream.available());
-
-                    Photo photo = Photo.builder()
-                            .originalName(fileName)
-                            .PicMLName(newFileName)
-                            .filePath(finalFilePath)
-                            .fromPhotoAlbumId(photoAlbumId)
-                            .fromUserId(photoAlbum.getFromUserId())
-                            .uploadTime(uploadTime)
-                            .fileSize(fileSize)
-                            .file600Path(currPhoto600Path)
-                            .build();
-
-                    photo.setId(sid.nextShort());
-                    photo.setCrTime(new Date());
-                    photo.setTeamid(photoAlbum.getTeamid());
-                    photoRepository.save(photo);
-
-                    return photo;
+                    return newFileName;
                 }
             } else {
                 log.info("用户传入的用户头像文件为空");
@@ -131,8 +181,10 @@ public class PhotoService {
                 }
             }
         }
+
         return null;
     }
+
 
     /**
      * DESC:    压缩文件
@@ -154,13 +206,13 @@ public class PhotoService {
         double compressionRatio = 0.8;
 
         if (fileLength > 5)
-            compressionRatio = 0.08;
+            compressionRatio = 0.05;
         else if (fileLength > 4)
-            compressionRatio = 0.11;
+            compressionRatio = 0.08;
         else if (fileLength > 2)
-            compressionRatio = 0.15;
+            compressionRatio = 0.11;
         else if (fileLength > 1.2)
-            compressionRatio = 0.40;
+            compressionRatio = 0.20;
 
 
         try {
@@ -216,8 +268,32 @@ public class PhotoService {
 
         return PhotoConstant.FILE_NAME_PREFIX + DateUtil.format(DateUtil.now(), "yyyyMMddHHmmss") + currentTimeMillis + orgFileNameSuffix;
 
-
     }
 
+    public MyPage<PhotoVOResult> findPhotoByAlbumId(User user , String albumId , int pageSize , int pageNum) throws Exception
+    {
+        String sql = " FROM PHOTO WHERE FROMUSERID = " + user.getId() + " AND FROMPHOTOALBUMID = " + albumId ;
+
+
+        MyPage<Photo> photoMyPage = primaryBaseService.executeSqlByPage("SELECT * " + sql, "SELECT COUNT(1) " + sql,
+                Maps.newHashMap(), pageNum, pageSize, Photo.class);
+
+        List<Photo> content = photoMyPage.getContent();
+        List<PhotoVOResult> results = new ArrayList<>( );
+        content.stream().forEach(e -> copyBeanToPhotoResult(e , results)) ;
+        MyPage<PhotoVOResult> resultsPage = new MyPage<>();
+        BeanUtils.copyProperties(photoMyPage  , resultsPage);
+        resultsPage.setContent(results);
+
+        return resultsPage;
+    }
+
+
+    public java.util.List<PhotoVOResult> copyBeanToPhotoResult(Photo photo , List<PhotoVOResult> results ){
+        PhotoVOResult result = new PhotoVOResult( );
+        BeanUtils.copyProperties(photo ,result );
+        results.add(result);
+        return results ;
+    }
 
 }

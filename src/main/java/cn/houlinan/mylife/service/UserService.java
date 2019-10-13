@@ -41,7 +41,9 @@ public class UserService {
      *@date:
     */
     @Transactional
-    public User addUser(String userId , String userName , String password , String email , Long mobile){
+    public User addUser(String userId , String userName , String password , String email , Long mobile
+//            , String openId
+    ){
 
 
         User user = User.builder()

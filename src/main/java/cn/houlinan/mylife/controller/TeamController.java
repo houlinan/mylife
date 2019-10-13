@@ -48,13 +48,15 @@ public class TeamController {
     })
     @ResponseBody
     public HHJSONResult createTeam(
-            TeamVO teamVO , User user
+            TeamVO teamVO ,@RequestParam(value = "userId",required = false) String userId
 //            @RequestParam(name = "teamName",required = false)  String teamName,
 //                                   @RequestParam(name = "teamPassword",required = false ) @NotBlank(message = "小组密码必传") String teamPassword,
 //                                   @RequestParam(name = "teamEmail" , required = false) String teamEmail,
 //                                   @RequestParam(name = "isSendAllUser", required = false) Integer isSendAllUser
     ) throws Exception {
 
+        User user = userRepository.findUserById(userId);
+        if(user == null) return HHJSONResult.errorMsg("没有找到您的用户信息");
         BeanValidator.check(teamVO);
         Team team = new Team( );
         BeanUtils.copyProperties(teamVO, team);

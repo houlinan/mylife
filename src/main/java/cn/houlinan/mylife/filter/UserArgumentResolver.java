@@ -64,6 +64,8 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         if(user == null ) throw new Exception("请登录");
 
         UserContext.setUser(user);
+        //延时redis中的时间
+        redisOperator.set(UserConstant.SESSION_LOGIN_USER + ":" + paramToken , user.getId() , 1000*60*30);
 
         return user ;
     }
