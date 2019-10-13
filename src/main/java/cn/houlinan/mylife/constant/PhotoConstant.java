@@ -10,8 +10,9 @@ import java.io.File;
  */
 public class PhotoConstant {
 
+    public static final String USERPHOTOALBUMNAME = "userPhotoAlbum";
 
-    public static final String PHOTOALBUM_ROOT_PATH = "C:" + File.separator + "mylifeDatas" + File.separator + "userPhotoAlbum" + File.separator ;
+    public static final String PHOTOALBUM_ROOT_PATH = "C:" + File.separator + "mylifeDatas" + File.separator + USERPHOTOALBUMNAME + File.separator ;
 
     public static final String FILE_NAME_PREFIX = "UP" ;
 }

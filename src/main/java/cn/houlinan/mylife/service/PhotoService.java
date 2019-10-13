@@ -79,19 +79,19 @@ public class PhotoService {
 
         String finalPath = path + File.separator + photoAlbumId + File.separator;
 
-        String fileAddress = finalPath.replace("C:\\mylifeDatas\\",rootAddress ) ;
 
         String finalFileName = saveFileToPath(files, finalPath);
 
         //设置文件最终路径
         String finalFilePath = finalPath + finalFileName;
 
+        String fileAddress = finalPathToAddress(finalFilePath);
 
         String currPhoto600Path = getNewFileName(finalFilePath, true);
         currPhoto600Path = finalPath + currPhoto600Path;
 
 
-        String file600Address = currPhoto600Path.replace("C:\\mylifeDatas\\",rootAddress ) ;
+        String file600Address = finalPathToAddress(currPhoto600Path);
 
         //处理文件
         File faceFile = new File(finalFilePath);
@@ -129,6 +129,15 @@ public class PhotoService {
         }
         return photo;
 
+    }
+    public String finalPathToAddress(String finalPath){
+        return finalPath.replace("C:\\mylifeDatas\\",rootAddress )
+        .replace(PhotoConstant.USERPHOTOALBUMNAME + "\\" , "").replaceAll("\\\\" , "/");
+    }
+
+    public static void main(String[] args) {
+        String str = "https://www.houlinan.cn/mylife/img/userPhotoAlbum/1910137ZW0PN1T7C\\1910137ZW0PN1T7C\\UP20191013194921361949.jpg";
+        System.out.println(str.replaceAll("\\\\" , "/"));
     }
 
     public String saveFileToPath(MultipartFile files, String path) {
@@ -206,13 +215,13 @@ public class PhotoService {
         double compressionRatio = 0.8;
 
         if (fileLength > 5)
-            compressionRatio = 0.05;
+            compressionRatio = 0.02;
         else if (fileLength > 4)
-            compressionRatio = 0.08;
+            compressionRatio = 0.04;
         else if (fileLength > 2)
-            compressionRatio = 0.11;
+            compressionRatio = 0.07;
         else if (fileLength > 1.2)
-            compressionRatio = 0.20;
+            compressionRatio = 0.1;
 
 
         try {
@@ -272,7 +281,7 @@ public class PhotoService {
 
     public MyPage<PhotoVOResult> findPhotoByAlbumId(User user , String albumId , int pageSize , int pageNum) throws Exception
     {
-        String sql = " FROM PHOTO WHERE FROMUSERID = " + user.getId() + " AND FROMPHOTOALBUMID = " + albumId ;
+        String sql = " FROM PHOTO WHERE FROMUSERID = '" + user.getId() + "' AND FROMPHOTOALBUMID = '" + albumId + "'";
 
 
         MyPage<Photo> photoMyPage = primaryBaseService.executeSqlByPage("SELECT * " + sql, "SELECT COUNT(1) " + sql,

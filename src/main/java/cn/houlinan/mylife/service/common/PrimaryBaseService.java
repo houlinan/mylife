@@ -37,7 +37,7 @@ public class PrimaryBaseService {
      */
     public int queryCount(String sql, Map<String, Object> parameters) {
         Query query = entityManager.createNativeQuery(sql);
-        if (parameters != null) {
+        if (parameters != null && parameters.size() != 0) {
             Set<Entry<String, Object>> set = parameters.entrySet();
             for (Entry<String, Object> entry : set) {
                 query.setParameter(entry.getKey(), entry.getValue());

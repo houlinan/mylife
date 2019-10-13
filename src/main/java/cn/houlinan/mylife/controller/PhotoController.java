@@ -135,8 +135,8 @@ public class PhotoController {
     @ResponseBody
     public HHJSONResult findAppAlubmByUser(User user ,
                                            @RequestParam(value = "albumId" , required = false)String albumId,
-                                           @RequestParam(value = "pageSize",required = false ,defaultValue = "0")int pageSize,
-                                           @RequestParam(value = "pageNum",required = false ,defaultValue = "9")int pageNum
+                                           @RequestParam(value = "pageSize",required = false ,defaultValue = "9")int pageSize,
+                                           @RequestParam(value = "pageNum",required = false ,defaultValue = "0")int pageNum
                                            )throws Exception{
 
         if(CMyString.isEmpty(albumId)) return HHJSONResult.errorMsg("传入相册id为空");
