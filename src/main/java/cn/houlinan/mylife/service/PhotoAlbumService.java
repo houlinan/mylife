@@ -6,6 +6,7 @@ import cn.houlinan.mylife.entity.PhotoAlbum;
 import cn.houlinan.mylife.entity.Team;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.PhotoAlbumRepository;
+import cn.houlinan.mylife.utils.CMyString;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class PhotoAlbumService {
             photoAlbum.setTeamid(user.getTeamid());
             photoAlbum.setPath(PhotoConstant.PHOTOALBUM_ROOT_PATH + sidStr);
             photoAlbum.setFromUserId(user.getId());
+            if(!CMyString.isEmpty(photoAlbum.getPassword())) photoAlbum.setIsHasPwd(1);
         }
 
         photoAlbumRepository.save(photoAlbum);

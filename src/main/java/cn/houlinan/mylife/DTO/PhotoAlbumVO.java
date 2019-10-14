@@ -50,4 +50,7 @@ public class PhotoAlbumVO extends BaseEntity{
     @ApiModelProperty(value = "相册标签" , name = "albumLabel" , example = "1")
     private String albumLabel;
 
+    @ApiModelProperty(value = "是否有密码" , name = "isHasPwd" , example = "1")
+    private Integer isHasPwd ;
+
 }

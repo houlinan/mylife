@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.bind.ValidationException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -144,6 +145,59 @@ public class PhotoController {
         MyPage<PhotoVOResult> photoByAlbumId = photoService.findPhotoByAlbumId(user, albumId, pageSize, pageNum);
 
         return HHJSONResult.ok(photoByAlbumId);
+    }
+
+
+    /**
+     *DESC:支持多文件上传图片
+     *@param:  files
+     *@return:  Result 返回文件的名称和静态地址
+     *@author hou.linan
+     *@date:
+     */
+    @PostMapping(value = "/uploadPicToUserDisPlayAlbum" , consumes = "multipart/*" , headers = "content-type=multipart/form-data")
+    @ApiOperation(value = "上传图片", notes = "上传图片的接口")
+    @ResponseBody
+    public HHJSONResult uploadPicToUserDisPlayAlbum(
+            @ApiParam(value = "上传文件",required = false)
+            @RequestParam(name = "files" , required = false) MultipartFile[] files ,
+                                  User user){
+
+        Team team = user.getTeam();
+        if(team == null)  return HHJSONResult.errorMsg("请先绑定组织");
+
+        String path = user.getHiddenPicsPath();
+
+        //  上传文件
+        for(int a = 0 ;a <files.length ;a ++ ){
+            MultipartFile file = files[a];
+            if(!ObjectUtils.isEmpty(file)){
+                String fileName = photoService.saveFileToPath(file , path);
+                String finalFilePath = path + File.separator + fileName ;
+                String currPhoto600Path = photoService.getNewFileName(finalFilePath, true);
+                currPhoto600Path = path + currPhoto600Path;
+                photoService.zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
+            }
+        }
+
+        return HHJSONResult.ok() ;
+    }
+
+
+
+    @ApiOperation(value = "根据用户id获取用户所有相册", notes = "根据用户id获取用户所有相册的接口")
+    @RequestMapping("/checkAlbumPassword")
+    @ResponseBody
+    public HHJSONResult checkAlbumPassword(
+            @RequestParam(value = "albumId" , required = false)String albumId,
+            @RequestParam(value = "passWord" , required = false)String passWord){
+
+        PhotoAlbum photoAlbumById = photoAlbumRepository.findPhotoAlbumById(albumId);
+        if(photoAlbumById == null ) return HHJSONResult.errorMsg("没找到相册信息");
+        if(CMyString.isEmpty(photoAlbumById.getPassword())) return HHJSONResult.ok();
+        if(CMyString.isEmpty(passWord)) return HHJSONResult.errorMsg("密码错误");
+        if(!photoAlbumById.getPassword().equals(passWord)) return HHJSONResult.errorMsg("密码错误");
+        return HHJSONResult.ok();
     }
 
 

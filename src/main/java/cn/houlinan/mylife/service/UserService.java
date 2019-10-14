@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -60,7 +61,7 @@ public class UserService {
 
         if(CMyString.isEmpty(user.getId()) || "0".equals(user.getId())) {
             user.setId(sid.nextShort());
-            user.setHiddenPicsPath(UserConstant.USER_NOTDISPLAY_PICS_ROOT_PATH + user.getUserName());
+            user.setHiddenPicsPath(UserConstant.USER_NOTDISPLAY_PICS_ROOT_PATH + user.getUserName()+ File.separator );
             user.setCrTime(new Date());
             user.setUpdateTime(new Date());
         }
