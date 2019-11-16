@@ -58,6 +58,10 @@ public class HPShop extends BaseEntity{
     @Column(name = "admin2rcode", length = 50)
     private String admin2RCode ;
 
+    @ApiModelProperty(value = "店长id" , name = "adminUserId" , example = "1=aaaaa")
+    @Column(name = "adminuserid", length = 50)
+    private String adminUserId ;
+
     @ApiModelProperty(value = "是否置顶" , name = "isTop" , example = "0")
     @Column(name = "istop", length = 2,columnDefinition = "int(2) default 0")
     private Integer isTop;

@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
  */
 public class GetParametersUtile {
 
-
     public static void main(String[] args) throws Exception{
         String path = "C:\\Users\\houli\\Desktop\\appPram.txt" ;
         String result = readTxt(path).toString() ;

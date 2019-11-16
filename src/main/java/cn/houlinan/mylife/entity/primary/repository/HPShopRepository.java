@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface HPShopRepository extends BaseJpaRepository<HPShop, Serializable> {
 
+     HPShop findHPShopById(String id);
 
 }
