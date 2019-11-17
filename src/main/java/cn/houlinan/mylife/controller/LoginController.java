@@ -56,7 +56,7 @@ public class LoginController {
     @RequestMapping("/login")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userName", value = "用户名称", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
-            @ApiImplicitParam(name = "passWord", value = "用户密码", required = true, dataType = "String", paramType = "query", defaultValue = "admim"),
+            @ApiImplicitParam(name = "passWord", value = "用户密码", required = true, dataType = "String", paramType = "query", defaultValue = "admin"),
 
     })
     @ApiOperation(value = "用户登陆", notes = "用户登陆接口")
