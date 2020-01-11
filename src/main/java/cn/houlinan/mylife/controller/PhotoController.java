@@ -171,13 +171,7 @@ public class PhotoController {
         //  上传文件
         for(int a = 0 ;a <files.length ;a ++ ){
             MultipartFile file = files[a];
-            if(!ObjectUtils.isEmpty(file)){
-                String fileName = photoService.saveFileToPath(file , path);
-                String finalFilePath = path + File.separator + fileName ;
-                String currPhoto600Path = photoService.getNewFileName(finalFilePath, true);
-                currPhoto600Path = path + currPhoto600Path;
-                photoService.zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
-            }
+            photoService.copyFileToPath(file , path);
         }
 
         return HHJSONResult.ok() ;

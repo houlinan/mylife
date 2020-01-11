@@ -10,6 +10,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+import javax.swing.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * DESC：
@@ -37,6 +40,7 @@ public class HPProduct extends BaseEntity {
     /**
      * 标题名称
      * */
+    @NotBlank(message = "店铺需要一个名称哦！")
     @ApiModelProperty(value = "标题名称" , name = "title" , example = "1")
     @Column(name = "title", length = 100 )
     private String title ;
@@ -44,13 +48,15 @@ public class HPProduct extends BaseEntity {
     /**
      * 运费
      * */
-    @ApiModelProperty(value = "库存" , name = "freight" , example = "0")
+    @NotBlank(message = "没有运费可以使用默认的0哦!")
+    @ApiModelProperty(value = "运费" , name = "freight" , example = "0")
     @Column(name = "freight", length = 5,columnDefinition = "int(5) default 0")
     private String freight ;
 
     /**
      * 库存
      * */
+//    @NotBlank(message = "没有库存可以使用默认的0哦！")
     @ApiModelProperty(value = "库存" , name = "stockNumber" , example = "0")
     @Column(name = "stocknumber", length = 5,columnDefinition = "int(5) default 0")
     private int stockNumber ;
@@ -58,17 +64,25 @@ public class HPProduct extends BaseEntity {
     /**
      * 实际价格
      * */
+//    @NotBlank(message = "需要一个价格哦！")
     @ApiModelProperty(value = "实际价格" , name = "price" , example = "0")
     @Column(name = "price", length = 10,columnDefinition = "DOUBLE(10, 2 )")
-    private int price ;
+    private double price ;
 
     /**
      * 原价
      * */
     @ApiModelProperty(value = "原始价格" , name = "orgPrice" , example = "0")
     @Column(name = "orgprice", length = 10,columnDefinition = "DOUBLE(10 ,2 ) ")
-    private int orgPrice ;
+    private double orgPrice ;
 
+
+    /**
+     * 店铺id
+     * */
+    @ApiModelProperty(value = "店铺id" , name = "shopId" , example = "0")
+    @Column(name = "shopid", length = 50 )
+    private String shopId ;
 
 
 }

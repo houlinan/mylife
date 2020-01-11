@@ -27,7 +27,7 @@ public abstract class BaseEntity implements Serializable {
 
     @Id
     @Column(name = "id" ,length = 64)
-    @ApiModelProperty(value = "用户主键ID" , hidden = true)
+    @ApiModelProperty(value = "用户主键ID" , hidden = true )
     private String id ;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")

@@ -59,4 +59,20 @@ public class User extends BaseEntity{
     @Column(name = "last_login_time")
     private Date lastLoginTime;
 
+    /**
+     * 店铺id
+     * */
+    @ApiModelProperty(value = "店铺id" , name = "shopId" , example = "1.")
+    @Column(name = "shopid", length = 50)
+    private String shopId ;
+
+
+    /**
+     *  是否是店铺管理员s
+     * */
+    @ApiModelProperty(value = "是否店铺管理员" , name = "isShopAdmin" , example = "0")
+    @Column(name = "isshopadmin", length = 2 ,columnDefinition = "int(2) default 0")
+    private int isShopAdmin ;
+
+
 }

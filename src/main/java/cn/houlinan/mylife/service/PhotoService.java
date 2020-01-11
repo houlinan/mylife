@@ -2,10 +2,7 @@ package cn.houlinan.mylife.service;
 
 import cn.houlinan.mylife.DTO.PhotoVOResult;
 import cn.houlinan.mylife.constant.PhotoConstant;
-import cn.houlinan.mylife.entity.Note;
-import cn.houlinan.mylife.entity.Photo;
-import cn.houlinan.mylife.entity.PhotoAlbum;
-import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.*;
 import cn.houlinan.mylife.entity.primary.repository.PhotoRepository;
 import cn.houlinan.mylife.service.common.MyPage;
 import cn.houlinan.mylife.service.common.PrimaryBaseService;
@@ -21,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -68,6 +66,8 @@ public class PhotoService {
         return uploadPic(files, photoAlbum.getPath(), photoAlbum.getId(),
                 photoAlbum.getFromUserId(), photoAlbum.getTeamid(), onlySaveZipFile);
     }
+
+
 
     public Photo uploadPic(MultipartFile files, String path, String photoAlbumId,
                            String fromUserId, String teamId, boolean onlySaveZipFile
@@ -303,6 +303,73 @@ public class PhotoService {
         BeanUtils.copyProperties(photo ,result );
         results.add(result);
         return results ;
+    }
+
+    public void copyFileToPath(MultipartFile file , String path){
+        if(!ObjectUtils.isEmpty(file)){
+            String fileName = saveFileToPath(file , path);
+            String finalFilePath = path + File.separator + fileName ;
+            String currPhoto600Path = getNewFileName(finalFilePath, true);
+            currPhoto600Path = path + currPhoto600Path;
+            zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
+        }
+    }
+
+
+
+    /**
+     *DESC: 保存鹤品图片，这个方法仅仅返回压缩后的图片访问地址
+     *@param:  files 文件
+     *@Param: finalPath 最终路径
+     *@Param: onlySaveZipFile 是否仅仅保存压缩后的文件
+     *@return:  java.lang.String
+     *@author hou.linan
+     *@date:  2019/12/22 18:59
+    */
+    public String uploadPicForHP(MultipartFile files, String finalPath, boolean onlySaveZipFile
+     , String shopRootAddress) {
+
+
+        String uploadTime = DateUtil.format(DateUtil.now(), "yyyy/MM/dd");
+
+
+        String finalFileName = saveFileToPath(files, finalPath);
+
+        //设置文件最终路径
+        String finalFilePath = finalPath + finalFileName;
+
+        String fileAddress = finalPathToAddress(finalFilePath);
+
+        String currPhoto600Path = getNewFileName(finalFilePath, true);
+        currPhoto600Path = finalPath + currPhoto600Path;
+
+
+        String file600Address = finalPathToAddressForH(currPhoto600Path , shopRootAddress);
+
+        //处理文件
+        File faceFile = new File(finalFilePath);
+
+        if (faceFile.getParentFile() != null || !faceFile.getParentFile().isDirectory()) {
+            faceFile.getParentFile().mkdirs();
+        }
+
+        //压缩文件
+        Long fileSize = zipWidthHeightImageFile(finalFilePath, currPhoto600Path, 10f);
+//                    //添加水印
+//                    addWaterMark(finalFilePath, finalFilePath, waterMsg);
+
+        if (onlySaveZipFile) {
+            File file = new File(finalFilePath);
+            if (file.exists()) file.delete();
+        }
+        return file600Address ;
+
+    }
+
+    public String finalPathToAddressForH(String finalPath,String shopRootAddresss){
+        return finalPath.replace("C:\\mylifeDatas\\",shopRootAddresss )
+//                .replace(PhotoConstant.USERPHOTOALBUMNAME + "\\" , "")
+                .replaceAll("\\\\" , "/");
     }
 
 }

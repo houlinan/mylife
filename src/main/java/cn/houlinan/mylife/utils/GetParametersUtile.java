@@ -8,6 +8,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DESC：根据前端请求获取参数转成json
@@ -17,47 +19,46 @@ import java.io.InputStreamReader;
  */
 public class GetParametersUtile {
 
+
+
+
     public static void main(String[] args) throws Exception{
+
         String path = "C:\\Users\\houli\\Desktop\\appPram.txt" ;
         String result = readTxt(path).toString() ;
-        System.out.println(StringEscapeUtils.escapeJson(result));
-//        System.out.println(result);
-        String str = "%E4%BA%A7%E5%93%81%E7%A0%94%E5%8F%91%E4%B8%AD%E5%BF%83";
+
+        System.out.println(result);
+        //\uFEFF
+        result = "\"" + StringEscapeUtils.escapeJson(result)+"\";";
+        String newResult = result.replace("\\uFEFF","") ;
+        System.out.println(newResult);
+    }
 
 
+   /****
+    public void testTijiao() throws Exception {
 
-//        System.out.println(URLEncoder.encode("aaaaaa" , "UTF-8"));
-//        JSONObject jsonObject = JSONObject.fromObject(result);
-//        Map<String, String> mapJson = JSONObject.fromObject(jsonObject);
-//        System.out.println("111" + mapJson.toString());
-        //resultMap = JSON.parseObject(jsonObjectData.toString(), Map.class);
-           }
+    User loginUser = User.findByName("playboy@163.com");
+    loginUser.setExtProperty("GroupId", 2);
+    ContextHelper.clear();
+    ContextHelper.initContext(loginUser);
+    String str =
+        ？
 
+    JSONObject jsonObject = JSONObject.fromObject(str);
+    Map<String, String> mapJson = JSONObject.fromObject(jsonObject);
+    HashMap hParameters = new HashMap<>();
+    hParameters.putAll(mapJson);
+    System.out.println(hParameters.toString());
+    hParameters.remove("serviceid");
+    hParameters.remove("methodname");
+    JSPRequestProcessor processor = new JSPRequestProcessor();
+    Object oReport = (Object) processor.excute(mapJson.get("SERVICEID") + "", "" + mapJson.get("METHODNAME"),
+    hParameters);
+    System.err.println(WCMJSONHelper.toJSON(oReport));
+    }
 
-
-
-/*    public void testGaojiandangan()throws Exception{
-
-        User loginUser = User.findByName("weibo@qq.com");
-        ContextHelper.clear();
-        ContextHelper.initContext(loginUser);
-        String str=
-
-        JSONObject jsonObject = JSONObject.fromObject(str
-        );
-        Map<String, String> mapJson = JSONObject.fromObject(jsonObject);
-        HashMap hParameters  = new HashMap <>();
-        hParameters.putAll(mapJson);
-        System.out.println(hParameters.toString());
-        hParameters.remove("serviceid");
-        hParameters.remove("methodname");
-        JSPRequestProcessor processor = new JSPRequestProcessor();
-        Object oReport = (Object) processor.excute(mapJson.get("SERVICEID") + "", "" +mapJson.get("METHODNAME"), hParameters);
-        System.err.println(WCMJSONHelper.toJSON(oReport)
-        );
-
-
-    }*/
+    */
 
     public static JSONObject readTxt(String filePath) {
 

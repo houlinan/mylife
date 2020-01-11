@@ -32,7 +32,7 @@ public class HPProductPicList extends BaseEntity {
     private String productId;
 
     @ApiModelProperty(value = "图片地址" , name = "picSrc" , example = "1")
-    @Column(name = "picSrc", length = 100 )
+    @Column(name = "picsrc", length = 500 )
     private String picSrc ;
 
     @ApiModelProperty(value = "图片上传人" , name = "uploadUserId" , example = "1")
