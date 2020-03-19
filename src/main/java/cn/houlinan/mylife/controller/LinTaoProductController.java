@@ -6,7 +6,9 @@ import cn.houlinan.mylife.constant.LinLinLin_LinTaoConstent;
 import cn.houlinan.mylife.entity.*;
 import cn.houlinan.mylife.entity.primary.repository.HPProductPicListRepository;
 import cn.houlinan.mylife.entity.primary.repository.HPProductRepository;
+import cn.houlinan.mylife.entity.primary.repository.HPShopKindRepository;
 import cn.houlinan.mylife.entity.primary.repository.HPShopRepository;
+import cn.houlinan.mylife.service.KindService;
 import cn.houlinan.mylife.service.PhotoService;
 import cn.houlinan.mylife.service.common.MyPage;
 import cn.houlinan.mylife.service.common.PrimaryBaseService;
@@ -29,9 +31,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * DESC：林琳琳美鞋店
@@ -61,8 +61,13 @@ public class LinTaoProductController {
     HPProductPicListRepository hpProductPicListRepository;
 
     @Autowired
-    PrimaryBaseService primaryBaseService ;
+    PrimaryBaseService primaryBaseService;
 
+    @Autowired
+    HPShopKindRepository hpShopKindRepository;
+
+    @Autowired
+    KindService kindService;
 
     @ResponseBody
     @PostMapping("/save")
@@ -85,10 +90,10 @@ public class LinTaoProductController {
 
         hpProduct.setShopId(LinLinLin_LinTaoConstent.SHOP_ID);
         String headPicPath = HPConstant.HP_SHOP_PICS_PATH + LinLinLin_LinTaoConstent.SHOP_ID + File.separator +
-                LinLinLin_LinTaoConstent.FOLDER_NAME  + File.separator;
+                LinLinLin_LinTaoConstent.FOLDER_NAME + File.separator;
 
         //处理方面图片的上传
-        photoService.uploadPicForHP(productHeadPic, headPicPath , true ,"https://www.houlinan.cn/mylife/img" );
+        photoService.uploadPicForHP(productHeadPic, headPicPath, true, "https://www.houlinan.cn/mylife/img");
         hpProduct.setProductHeadPic(headPicPath);
 
         log.info("林涛美鞋店商品保存" + hpProduct.toString());
@@ -99,11 +104,11 @@ public class LinTaoProductController {
     @PostMapping("/saveProductPics")
     @ResponseBody
     public HHJSONResult saveProductPics(@RequestParam(value = "productId", required = false) String productId
-            , @RequestParam(name = "productPics", required = false) MultipartFile[] productPics , User user) {
+            , @RequestParam(name = "productPics", required = false) MultipartFile[] productPics, User user) {
 
         if (CMyString.isEmpty(productId)) return HHJSONResult.errorMsg("传入商品Id为空");
         HPProduct hpProductById = hpProductRepository.findHPProductById(productId);
-        if(hpProductById == null) return HHJSONResult.errorMsg("没有找到相应商品");
+        if (hpProductById == null) return HHJSONResult.errorMsg("没有找到相应商品");
 
 
         for (int i = 0; i < productPics.length; i++) {
@@ -115,7 +120,7 @@ public class LinTaoProductController {
             //处理方面图片的上传
             String httpAddress = photoService.uploadPicForHP(currFile, picPath, true, "https://www.houlinan.cn/mylife/img");
 
-            HPProductPicList picList = new HPProductPicList( );
+            HPProductPicList picList = new HPProductPicList();
             picList.setPicSrc(httpAddress);
             picList.setProductId(productId);
             picList.setUploadUserId(user.getId());
@@ -128,37 +133,103 @@ public class LinTaoProductController {
     }
 
 
-
     @GetMapping("/findProductById")
     @ResponseBody
-    public HHJSONResult findProductById(@RequestParam(name = "productId" , required = false) String productId ,User user){
+    public HHJSONResult findProductById(@RequestParam(name = "productId", required = false) String productId, User user) {
 
-        if(CMyString.isEmpty(productId)) return HHJSONResult.errorMsg("传入商品id为空");
+        if (CMyString.isEmpty(productId)) return HHJSONResult.errorMsg("传入商品id为空");
 
         HPProduct hpProductById = hpProductRepository.findHPProductById(productId);
-        if(hpProductById == null) return HHJSONResult.errorMsg("没有找到相应商品");
+        if (hpProductById == null) return HHJSONResult.errorMsg("没有找到相应商品");
 
         //查询商品相关图片
         List<HPProductPicList> hpProductPicListsByProductId = hpProductPicListRepository.findHPProductPicListsByProductId(productId);
 
         JSONObject jsonObject = JSONObject.fromObject(hpProductById);
 
-        jsonObject.put("picList" , JSONArray.fromObject(hpProductPicListsByProductId));
+        jsonObject.put("picList", JSONArray.fromObject(hpProductPicListsByProductId));
 
-        return HHJSONResult.ok(jsonObject.toString()) ;
+        return HHJSONResult.ok(jsonObject.toString());
     }
 
     @GetMapping("/queryProducts")
     @ResponseBody
-    public HHJSONResult queryProduct(@RequestParam(name = "pageIndex" , defaultValue = "0")int pageIndex ,
-                                     @RequestParam(name = "pageSize" , defaultValue = "15") int pageSize) throws Exception{
+    public HHJSONResult queryProduct(@RequestParam(name = "pageIndex", defaultValue = "0") int pageIndex,
+                                     @RequestParam(name = "pageSize", defaultValue = "15") int pageSize) throws Exception {
 
         String sql = " FROM hpproduct WHERE shopid = '" + LinLinLin_LinTaoConstent.SHOP_ID + "'";
 
         MyPage<HPProduct> photoMyPage = primaryBaseService.executeSqlByPage("SELECT * " + sql, "SELECT COUNT(1) " + sql,
                 Maps.newHashMap(), pageIndex, pageSize, HPProduct.class);
 
-        return HHJSONResult.ok(photoMyPage) ;
+        return HHJSONResult.ok(photoMyPage);
     }
+
+    @PostMapping("/saveProduct")
+    @ResponseBody
+    public HHJSONResult saveProduct(
+            @RequestParam(name = "productPic", required = false) MultipartFile productPic,
+
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "desc", required = false) String desc,
+            @RequestParam(name = "yuanjia", required = false) double yuanjia,
+            @RequestParam(name = "xianjia", required = false) double xianjia,
+            @RequestParam(name = "kucun", required = false) String kucun,
+            @RequestParam(name = "parentId", required = false) String parentId,
+            @RequestParam(name = "yunfei", required = false) String yunfei,
+            @RequestParam(name = "id", required = false , defaultValue = "") String id
+            , User user) throws Exception {
+
+        if (CMyString.isEmpty(title)) throw new Exception("商品名称为空");
+        if (CMyString.isEmpty(parentId)) throw new Exception("商品分类为空");
+        if (productPic == null) throw new Exception("商品图片必传");
+
+
+        //保存数据
+        HPProduct build = new HPProduct( );
+
+        if(!CMyString.isEmpty(id)){
+            HPProduct hpProductById = hpProductRepository.findHPProductById(id);
+            if(hpProductById == null ) return HHJSONResult.errorMsg("没有找到要修改的商品");
+        }else{
+            build.setId(sid.nextShort());
+        }
+
+        build.setProductHeadPic("");
+        build.setShopId(LinLinLin_LinTaoConstent.SHOP_ID);
+        build.setTitle(title);
+        build.setFreight(yunfei + "");
+        build.setStockNumber(Integer.valueOf(kucun));
+        build.setOrgPrice(yuanjia);
+        build.setPrice(xianjia);
+        build.setProductDesc(desc);
+        build.setKindDN(kindService.getKindDN(parentId).get("name"));
+        build.setRootKindId(kindService.getKindDN(parentId).get("id"));
+        hpProductRepository.save(build);
+
+
+        String picPath = HPConstant.HP_SHOP_PICS_PATH + LinLinLin_LinTaoConstent.SHOP_ID + File.separator +
+                LinLinLin_LinTaoConstent.FOLDER_NAME + File.separator + build.getId() + File.separator;
+        //处理方面图片的上传
+        String httpAddress = photoService.uploadPicForHP(productPic, picPath, true, "https://www.houlinan.cn/mylife/img/");
+
+        build.setProductHeadPic(httpAddress);
+        hpProductRepository.save(build);
+
+        return HHJSONResult.ok(build);
+    }
+
+
+    public String getFirstKindId(String currId){
+        HPShopKind hpShopKindById = hpShopKindRepository.findHPShopKindById(currId);
+        if(hpShopKindById == null)  return "";
+
+        return  "";
+    }
+
+
+
+
+
 
 }

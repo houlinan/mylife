@@ -34,7 +34,7 @@ public class HPProduct extends BaseEntity {
      * 封面图片
      * */
     @ApiModelProperty(value = "封面图片" , name = "productHeadPic" , example = "1")
-    @Column(name = "productheadpic", length = 100 )
+    @Column(name = "productheadpic", length = 1000 )
     private String productHeadPic ;
 
     /**
@@ -46,9 +46,17 @@ public class HPProduct extends BaseEntity {
     private String title ;
 
     /**
+     * 标题名称
+     * */
+//    @NotBlank(message = "商品描述")
+    @ApiModelProperty(value = "商品描述" , name = "productDesc" , example = "1")
+    @Column(name = "productdesc", length = 100 )
+    private String productDesc ;
+
+    /**
      * 运费
      * */
-    @NotBlank(message = "没有运费可以使用默认的0哦!")
+//    @NotBlank(message = "没有运费可以使用默认的0哦!")
     @ApiModelProperty(value = "运费" , name = "freight" , example = "0")
     @Column(name = "freight", length = 5,columnDefinition = "int(5) default 0")
     private String freight ;
@@ -83,6 +91,20 @@ public class HPProduct extends BaseEntity {
     @ApiModelProperty(value = "店铺id" , name = "shopId" , example = "0")
     @Column(name = "shopid", length = 50 )
     private String shopId ;
+
+    /**
+     * 店铺id
+     * */
+    @ApiModelProperty(value = "所属种类全路径" , name = "kindDN" , example = "0")
+    @Column(name = "kinddn", length = 200 )
+    private String kindDN ;
+
+    /**
+     * 店铺id
+     * */
+    @ApiModelProperty(value = "所属父类种类id" , name = "rootKindId" , example = "0")
+    @Column(name = "rootkindid", length = 200 )
+    private String rootKindId ;
 
 
 }

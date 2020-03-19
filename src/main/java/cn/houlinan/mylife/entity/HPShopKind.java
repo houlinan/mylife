@@ -63,4 +63,12 @@ public class HPShopKind extends BaseEntity{
     @ApiModelProperty(value = "图标" , name = "icon" , example = "1.")
     @Column(name = "icon", length = 50)
     String icon ;
+
+    /**
+     * 店铺id
+     * */
+    @ApiModelProperty(value = "所属种类全路径" , name = "kindDN" , example = "0")
+    @Column(name = "kinddn", length = 200 )
+    private String kindDN ;
+
 }

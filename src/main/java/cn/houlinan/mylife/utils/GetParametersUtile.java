@@ -1,8 +1,10 @@
 package cn.houlinan.mylife.utils;
 
+import com.sun.org.apache.xml.internal.security.keys.content.DEREncodedKeyValue;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.util.StringUtils;
+import sun.security.util.DerEncoder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -20,9 +22,9 @@ import java.util.List;
 public class GetParametersUtile {
 
 
-
-
     public static void main(String[] args) throws Exception{
+
+
 
         String path = "C:\\Users\\houli\\Desktop\\appPram.txt" ;
         String result = readTxt(path).toString() ;
@@ -32,7 +34,10 @@ public class GetParametersUtile {
         result = "\"" + StringEscapeUtils.escapeJson(result)+"\";";
         String newResult = result.replace("\\uFEFF","") ;
         System.out.println(newResult);
+
     }
+
+
 
 
    /****

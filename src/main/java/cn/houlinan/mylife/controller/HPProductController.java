@@ -1,16 +1,18 @@
 package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.constant.HPConstant;
-import cn.houlinan.mylife.entity.HPProduct;
-import cn.houlinan.mylife.entity.HPShop;
-import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.*;
 import cn.houlinan.mylife.entity.primary.repository.HPProductRepository;
+import cn.houlinan.mylife.entity.primary.repository.HPShopKindRepository;
 import cn.houlinan.mylife.entity.primary.repository.HPShopRepository;
 import cn.houlinan.mylife.service.PhotoService;
+import cn.houlinan.mylife.service.common.MyPage;
+import cn.houlinan.mylife.service.common.PrimaryBaseService;
 import cn.houlinan.mylife.utils.BeanValidator;
 import cn.houlinan.mylife.utils.CMyString;
 import cn.houlinan.mylife.utils.HHJSONResult;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -43,6 +45,9 @@ public class HPProductController {
     HPProductRepository hpProductRepository;
 
     @Autowired
+    HPShopKindRepository hpShopKindRepository;
+
+    @Autowired
     Sid  sid ;
 
     @Autowired
@@ -50,6 +55,9 @@ public class HPProductController {
 
     @Autowired
     PhotoService photoService;
+
+    @Autowired
+    PrimaryBaseService primaryBaseService;
 
 
     @ResponseBody
@@ -92,6 +100,29 @@ public class HPProductController {
 //    ){
 //        return HHJSONResult.ok();
 //    }
+
+
+    @RequestMapping("/getShopProductsByKindId")
+    @ResponseBody
+    public HHJSONResult getShopProductsByKindId(@RequestParam(name = "shopId",required = false)String kindId,
+                                                @RequestParam(name = "pageSize", defaultValue = "10") int pageSize ,
+                                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum ,
+                                                @RequestParam(name = "searchValue" ,defaultValue = "")String searchValue)throws Exception{
+
+        HPShopKind hpShopKindById = hpShopKindRepository.findHPShopKindById(kindId);
+        if(hpShopKindById == null ) return HHJSONResult.errorMsg("没有找到对应分类信息");
+
+        String selectSql = " FROM hpproduct WHERE ROOTKINDID = '" + kindId +"'" ;
+        if(CMyString.isEmpty(searchValue)){
+            selectSql += " AND rootkindid LIKE '%" + searchValue + "%'";
+        }
+
+        MyPage<HPProduct> photoMyPage = primaryBaseService.executeSqlByPage("SELECT * " + selectSql, "SELECT COUNT(1) " + selectSql,
+                Maps.newHashMap(), pageNum, pageSize, HPProduct.class);
+
+
+        return HHJSONResult.ok(photoMyPage);
+    }
 
 
 }
