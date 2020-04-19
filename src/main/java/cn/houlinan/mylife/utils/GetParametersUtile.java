@@ -24,9 +24,7 @@ public class GetParametersUtile {
 
     public static void main(String[] args) throws Exception{
 
-
-
-        String path = "C:\\Users\\houli\\Desktop\\appPram.txt" ;
+        String path = "C:\\Users\\houlinan\\Desktop\\appPram.txt" ;
         String result = readTxt(path).toString() ;
 
         System.out.println(result);
@@ -36,9 +34,6 @@ public class GetParametersUtile {
         System.out.println(newResult);
 
     }
-
-
-
 
    /****
     public void testTijiao() throws Exception {
