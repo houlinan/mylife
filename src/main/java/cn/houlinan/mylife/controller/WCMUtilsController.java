@@ -44,15 +44,18 @@ public class WCMUtilsController {
         for (int i = 0; i < strsaa.length; i++) {
             Object o = strsaa[i];
             String[] strsa = o.toString().split(":");
-            if(!CMyString.isEmpty(strsa[0]) && "methodname".equals(strsa[0])){
-                methodname = strsa[1];
+            if(!CMyString.isEmpty(strsa[0]) &&( "methodname".toUpperCase().equals(strsa[0]) || "methodname".equals(strsa[0]) )){
+                methodname = strsa[1].trim();
+
+                methodname = methodname.substring(0 , 1 ).toUpperCase()  + methodname.substring(1 , methodname.length());
+
 
                 String testStr = "public void test"+methodname.trim()+"() throws Exception {\n" +
 
                         "\t\tUser loginUser = User.findByName(\"" + userName + "\");\n" +
                         "\t\tContextHelper.clear();\n" +
                         "\t\tContextHelper.initContext(loginUser);\n" +
-                        "\t\tString str =\n\"" +newForMat + "\";\n"+
+                        "\t\tString str =\n\n\n\t\t\"" +newForMat + "\";\n\n\n\n"+
                         "\t\tJSONObject jsonObject = JSONObject.fromObject(str);\n" +
                         "\t\tMap<String, String> mapJson = JSONObject.fromObject(jsonObject);\n" +
                         "\t\tHashMap hParameters = new HashMap<>();\n" +
@@ -61,11 +64,11 @@ public class WCMUtilsController {
                         "\t\thParameters.remove(\"serviceid\");\n" +
                         "\t\thParameters.remove(\"methodname\");\n" +
                         "\t\tJSPRequestProcessor processor = new JSPRequestProcessor();\n" +
-                        "\t\tObject oReport = (Object) processor.excute(mapJson.get(\"SERVICEID\") + \"\", \"\" + mapJson.get(\"METHODNAME\"),\n" +
+                        "\t\tObject object = (Object) processor.excute(mapJson.get(\"SERVICEID\") + \"\", \"\" + mapJson.get(\"METHODNAME\"),\n" +
                         "\t\t\t\thParameters);\n" +
-                        "\t\tSystem.err.println(WCMJSONHelper.toJSON(oReport));\n" +
+                        "\t\tSystem.err.println(WCMJSONHelper.toJSON(object));\n" +
                         "\t\tThread.sleep(3000);\n" +
-                        "\t}";
+                        "\t\t}";
 
 
                 System.out.println(testStr);

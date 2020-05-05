@@ -1,11 +1,13 @@
 package cn.houlinan.mylife.entity;
 
 import cn.houlinan.mylife.listener.BaseEntityUpdateListener;
+import cn.houlinan.mylife.utils.IgnoreSwaggerParameter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -45,4 +47,10 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(name = "teamid")
     private String teamid;
+
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey(name = "none"))
+    @ApiModelProperty(value = "所属小组" , name = "team" , example = "1" ,required = true)
+    @IgnoreSwaggerParameter
+    private Team team ;
 }

@@ -17,6 +17,11 @@ import java.io.InputStreamReader;
  */
 public class GetParametersUtileByInput {
 
+    public static void main(String[] args) {
+     System.out.println("[{\"STORAGE\":\"1\",\"APPENDIXVIDEOID\":\"2\",\\\"PLATFORMFLAG\\\":\\\"LocalVideoObject\\\",\\\"CRTIME\\\":\\\"2019-11-01 03:21:10\\\",\\\"AUDIOVIDEOID\\\":\\\"W020191101120709814597.mp4\\\",\\\"TENANTID\\\":\\\"0\\\",\\\"COMMENTS\\\":\\\"\\\",\\\"CRUSER\\\":\\\"admin\\\",\\\"REMARKS\\\":\\\"\\\",\\\"URL\\\":\\\"http://106.124.143.127:18080/upload/U0201911/U020191101/U020191101117434719553.mp4\\\",\\\"METADATAID\\\":\\\"213\\\"}]\n" +
+             "    ");
+    }
+
 
     /****
      public void testTijiao() throws Exception {

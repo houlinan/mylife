@@ -1,5 +1,7 @@
 package cn.houlinan.mylife;
 
+import cn.houlinan.mylife.entity.Team;
+import cn.houlinan.mylife.entity.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -45,7 +47,9 @@ public class Swagger2 {
 
         @Bean
         public Docket createRestApi() {
-            return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
+            return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo())
+                    .ignoredParameterTypes(User.class, Team.class)
+                    .select()
 
 //            return new Docket(DocumentationType.SWAGGER_2)
 //                    .apiInfo(apiInfo())
@@ -74,7 +78,6 @@ public class Swagger2 {
                 // 定义版本号
                 .version("1.0").build();
     }
-
 
 
 }

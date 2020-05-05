@@ -76,6 +76,7 @@ public class TeamController {
                                      @RequestParam(name = "teamPassword" ,required = false) String teamPassword ,
                                      User user  ){
 
+
         if(user.getTeam() != null || !CMyString.isEmpty(user.getTeamid()) ) return HHJSONResult.errorMsg("请先取消自己的组织");
 
         User adminUser = userRepository.findUserByUserName(adminUserName) ;
@@ -89,6 +90,9 @@ public class TeamController {
         user.setTeam(team );
         user.setTeamid(team.getId());
         userRepository.save(user);
+
+        //处理其他需要保存的用户数据
+        teamService.otherSaveUser(user);
 
 
         return HHJSONResult.ok(user) ;

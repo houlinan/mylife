@@ -2,8 +2,10 @@ package cn.houlinan.mylife.service;
 
 import cn.houlinan.mylife.constant.TeamConstant;
 import cn.houlinan.mylife.constant.UserConstant;
+import cn.houlinan.mylife.entity.GeLuoMiUser;
 import cn.houlinan.mylife.entity.Team;
 import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.primary.repository.GeLuoMiUserRepository;
 import cn.houlinan.mylife.entity.primary.repository.TeamRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.utils.CMyString;
@@ -30,6 +32,12 @@ public class TeamService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    GeLuoMiUserRepository geLuoMiUserRepository ;
+
+    @Autowired
+    GeLuoMiUserService geLuoMiUserService ;
 
     @Autowired
     Sid sid;
@@ -85,5 +93,19 @@ public class TeamService {
     }
 
 
+    /**
+     *DESC:保存用户相关其他对象数据
+     *@param:  user
+     *@return:  void
+     *@author hou.linan
+     *@date:  2020/5/1 23:01
+    */
+    public void otherSaveUser(User user) {
 
+        //保存格洛米用户数据
+        GeLuoMiUser geLuoMiUserById = geLuoMiUserRepository.findGeLuoMiUserById(user.getId());
+        geLuoMiUserById.setTeamid(user.getTeamid());
+        geLuoMiUserById.setTeam(user.getTeam());
+        geLuoMiUserRepository.save(geLuoMiUserById);
+    }
 }

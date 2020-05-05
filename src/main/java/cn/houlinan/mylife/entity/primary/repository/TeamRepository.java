@@ -7,4 +7,6 @@ import java.io.Serializable;
 
 public interface TeamRepository extends BaseJpaRepository<Team, Serializable> {
 
+    Team findTeamByTeamName(String teamName);
+
 }

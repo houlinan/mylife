@@ -47,12 +47,12 @@ public class UserService {
     ){
 
 
-        User user = User.builder()
-                .userName(userName)
-                .email(email)
-                .mobile(mobile)
-                .password(password)
-                .build();
+        User user = new User();
+        user.setUserName(userName);
+        user.setEmail(email);
+        user.setMobile(mobile);
+        user.setPassword(password);
+
 
         return saveUser(user);
     }
