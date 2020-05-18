@@ -12,10 +12,13 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
 /**
@@ -27,6 +30,27 @@ import java.util.Enumeration;
 @RequestMapping("/wcm")
 @Controller
 public class WCMUtilsController {
+
+    @Value("${wcm.forward.address}")
+    private String wcmAddress ;
+
+    @RequestMapping("/redirectToWcm")
+    public void redirectToWcm(HttpServletRequest request  , HttpServletResponse res )throws Exception{
+
+        StringBuffer result = new StringBuffer( wcmAddress+ "NewMediaPlatform/common/register?" );
+
+        Enumeration enu = request.getParameterNames();
+        while (enu.hasMoreElements()) {
+            String paraName = (String) enu.nextElement();
+            result.append(paraName).append("=").append(request.getParameter(paraName)).append("&");
+        }
+        if(result.toString().endsWith("&"))
+            result.setLength(result.length()-1);
+
+//        return "forward:/" + result.toString();
+        res.setStatus(302);
+        res.sendRedirect(result.toString());
+    }
 
     @RequestMapping("/createWCMTest")
     @ResponseBody
