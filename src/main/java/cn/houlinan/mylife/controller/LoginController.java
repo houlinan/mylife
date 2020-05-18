@@ -88,7 +88,7 @@ public class LoginController {
         currUser.setPassword("");
 
         //设置UserToken
-        UserVO usersVO = setUserRedisSessionToken(currUser);
+        UserVO usersVO = userService.setUserRedisSessionToken(currUser);
 
         String userToken = usersVO.getUserToken() ;
         CookieUtils.writeCookie(res,UserConstant.USER_TOKEN_NAME,userToken);
@@ -98,27 +98,4 @@ public class LoginController {
         return HHJSONResult.ok(usersVO);
     }
 
-    /*
-     *DESC: 想redis中添加用户的token
-     *@author hou.linan
-     *@date:  2018/8/22 16:21
-     *@param:  [user]
-     *@return:  com.trs.wxnew.ResultVO.UsersVO
-     */
-    public UserVO setUserRedisSessionToken(User user){
-        //将用户的信息添加到redis中
-        String uniqueToken = UUID.randomUUID().toString();
-
-        //此处使用 ‘ ： ’ 可以在redis中将数据分类保存
-        redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+user.getId() , uniqueToken , 1000*60*30 );
-        redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+uniqueToken , user.getId() , 1000*60*30 );
-        //将用户的token放入session中
-
-
-        UserVO usersVO = new UserVO();
-        BeanUtils.copyProperties(user, usersVO);
-        usersVO.setUserToken(uniqueToken);
-        log.info("将用户【{}】 Token信息放入redis成功" , user.getUserName());
-        return usersVO ;
-    }
 }

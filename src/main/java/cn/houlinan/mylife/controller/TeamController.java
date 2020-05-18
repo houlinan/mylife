@@ -3,6 +3,7 @@ package cn.houlinan.mylife.controller;
 import cn.houlinan.mylife.DTO.TeamVO;
 import cn.houlinan.mylife.entity.Team;
 import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.primary.repository.TeamRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.service.TeamService;
 import cn.houlinan.mylife.utils.BeanValidator;
@@ -37,6 +38,9 @@ public class TeamController {
 
     @Autowired
     UserRepository userRepository ;
+
+    @Autowired
+    TeamRepository teamRepository ;
 
     @ApiOperation(value = "小组注册", notes = "小组注册的接口")
     @PostMapping("/create")
@@ -115,6 +119,21 @@ public class TeamController {
         userRepository.save(user);
 
         return HHJSONResult.ok(user) ;
+    }
+    @ApiOperation(value = "验证小组是否正确", notes = "验证小组是否正确\"")
+    @GetMapping("/checkTeam")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "teamPassword", value = "当前用户密码", required = true, dataType = "String", paramType="query", defaultValue = "123456"),
+            @ApiImplicitParam(name = "teamId", value = "小组id", required = true, dataType = "String", paramType="query", defaultValue = "1")
+    })
+    @ResponseBody
+    public HHJSONResult checkTeam(String teamId , String teamPassword){
+        if(CMyString.isEmpty(teamPassword) || CMyString.isEmpty(teamId )){
+            return HHJSONResult.errorMsg("传入的小组信息为空");
+        }
+        Team teamByIdAndTeamPassword = teamRepository.findTeamByIdAndTeamPassword(teamId, teamPassword);
+        if(teamByIdAndTeamPassword ==  null) return HHJSONResult.errorMsg("没有找到对应的小组信息");
+        return HHJSONResult.ok(teamByIdAndTeamPassword.getTeamName());
     }
 
 

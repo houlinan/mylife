@@ -43,6 +43,11 @@ public class BaseUserEntity extends BaseEntity {
     private String password;
 
 
+    @ApiModelProperty(value = "openID" , name = "openId" , example = "oRnZI43JJpc1VUNYrjnR2uuDi8eA")
+    @Column(name = "openid", length = 100)
+    private String openId;
+
+
     @ApiModelProperty(value = "手机号" , name = "mobile" , example = "17625997779")
     @Column(name = "mobile")
     private Long mobile ;

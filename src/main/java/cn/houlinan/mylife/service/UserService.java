@@ -1,18 +1,22 @@
 package cn.houlinan.mylife.service;
 
+import cn.houlinan.mylife.DTO.UserVO;
 import cn.houlinan.mylife.constant.UserConstant;
+import cn.houlinan.mylife.entity.GeLuoMiUser;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
-import cn.houlinan.mylife.utils.CMyString;
-import cn.houlinan.mylife.utils.UpdataObjectUtil;
+import cn.houlinan.mylife.utils.*;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * DESC：用户service层
@@ -30,6 +34,8 @@ public class UserService {
     @Autowired
     Sid sid;
 
+    @Autowired
+    RedisOperator redisOperator;
 
     /**
      *DESC:注册使用
@@ -78,5 +84,49 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public GeLuoMiUser geLuoMiUserLogin(GeLuoMiUser geLuoMiUser , HttpServletResponse res)throws Exception{
+
+
+
+        User userByUserName1 = userRepository.findUserByUserName(geLuoMiUser.getUserName());
+        userByUserName1.setPassword("");
+        if(userByUserName1 == null) throw new Exception("处理用户数据失败，请联系管理员");
+
+        //设置UserToken
+        UserVO usersVO = setUserRedisSessionToken(userByUserName1);
+
+        String userToken = usersVO.getUserToken() ;
+        CookieUtils.writeCookie(res, UserConstant.USER_TOKEN_NAME,userToken);
+        log.info("userVo = {}" ,usersVO);
+        geLuoMiUser.setUserToken(userToken);
+        geLuoMiUser.setPassword("");
+
+        return geLuoMiUser ;
+    }
+
+
+    /*
+     *DESC: 想redis中添加用户的token
+     *@author hou.linan
+     *@date:  2018/8/22 16:21
+     *@param:  [user]
+     *@return:  com.trs.wxnew.ResultVO.UsersVO
+     */
+    public UserVO setUserRedisSessionToken(User user){
+        //将用户的信息添加到redis中
+        String uniqueToken = UUID.randomUUID().toString();
+
+        //此处使用 ‘ ： ’ 可以在redis中将数据分类保存
+        redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+user.getId() , uniqueToken , 1000*60*30 );
+        redisOperator.set(UserConstant.SESSION_LOGIN_USER+":"+uniqueToken , user.getId() , 1000*60*30 );
+        //将用户的token放入session中
+
+
+        UserVO usersVO = new UserVO();
+        BeanUtils.copyProperties(user, usersVO);
+        usersVO.setUserToken(uniqueToken);
+        log.info("将用户【{}】 Token信息放入redis成功" , user.getUserName());
+        return usersVO ;
+    }
 
 }

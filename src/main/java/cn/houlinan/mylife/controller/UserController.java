@@ -36,7 +36,7 @@ public class UserController {
     UserRepository userRepository;
 
     @Autowired
-    UserService userService ;
+    UserService userService;
 
     /**
      * DESC:用户注册
@@ -54,22 +54,33 @@ public class UserController {
             @ApiImplicitParam(name = "email", value = "用户邮箱", required = false, dataType = "String", paramType = "query", defaultValue = "houlinan@vip.qq.com"),
             @ApiImplicitParam(name = "mobile", value = "用户手机", required = false, dataType = "String", paramType = "query", defaultValue = "17625997779"),
     })
-    public HHJSONResult registUser(@RequestParam(name = "userName" ,required = false) String userName,
-                                   @RequestParam(name = "passWord" ,required = false) String passWord,
+    public HHJSONResult registUser(@RequestParam(name = "userName", required = false) String userName,
+                                   @RequestParam(name = "passWord", required = false) String passWord,
                                    @RequestParam(name = "email", required = false) String email,
                                    @RequestParam(name = "mobile", required = false) Long mobile
 //                                  , @RequestParam(name = "openId", required = false) String openId
-                                   ) throws Exception {
+    ) throws Exception {
 
-        if(CMyString.isEmpty(userName)) return HHJSONResult.errorMsg("请输入用户名称");
-        if(CMyString.isEmpty(passWord)) return HHJSONResult.errorMsg("请输入用户密码");
+        if (CMyString.isEmpty(userName)) return HHJSONResult.errorMsg("请输入用户名称");
+        if (CMyString.isEmpty(passWord)) return HHJSONResult.errorMsg("请输入用户密码");
 
         User user = userRepository.findUserByUserName(userName);
-        if(user != null )  return HHJSONResult.errorMsg("用户名已经存在");
+        if (user != null) return HHJSONResult.errorMsg("用户名已经存在");
 
-        User userResult = userService.addUser(null , userName ,passWord,email,mobile);
+        User userResult = userService.addUser(null, userName, passWord, email, mobile);
 
         return HHJSONResult.ok(userResult);
+    }
+
+    @ApiOperation(value = "验证用户名称是否可用", notes = "验证用户名称是否可用")
+    @RequestMapping("/checkUserNameHasUse")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userName", value = "用户登陆名称", required = false, dataType = "String", paramType = "query", defaultValue = "admin"),
+    })
+    public HHJSONResult checkUserNameHasUse(String userName) {
+        User userByUserName = userRepository.findUserByUserName(userName);
+        if (userByUserName != null) return HHJSONResult.errorMsg("该用户名称已经被使用");
+        return HHJSONResult.ok();
     }
 
 

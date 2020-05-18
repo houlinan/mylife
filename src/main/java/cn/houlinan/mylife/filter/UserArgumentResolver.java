@@ -51,8 +51,9 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         //2,获取token
         String paramToken = request.getParameter(UserConstant.USER_TOKEN_NAME);
+        String openId = request.getParameter("operId");
         String cookieToken = getCookieValue(request, UserConstant.USER_TOKEN_NAME);
-        if (StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken)) {
+        if (StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(openId)) {
             throw new Exception("请登录");
         }
         if (CMyString.isEmpty(paramToken)) paramToken = cookieToken;
@@ -60,6 +61,10 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         String userId = redisOperator.get(UserConstant.SESSION_LOGIN_USER + ":" + paramToken);
 
         User user = userRepository.findUserById(userId);
+        if(user == null ){
+            user = userRepository.findUserByOpenId(openId);
+            paramToken = openId ;
+        }
 
         if(user == null ) throw new Exception("请登录");
 

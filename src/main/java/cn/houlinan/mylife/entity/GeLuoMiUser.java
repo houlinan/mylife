@@ -31,10 +31,12 @@ import java.util.Date;
 @Builder
 public class GeLuoMiUser extends BaseUserEntity {
 
+    @Transient
+    @ApiModelProperty(value = "用户登录token" , name = "userToken" , example = "")
+    @Column(name = "usertoken", length = 20)
+    private String userToken ;
 
-
-
-    @NotNull(message = "请填写您的初始体重")
+//    @NotNull(message = "请填写您的初始体重")
     @ApiModelProperty(value = "初始体重" , name = "initWeight" , example = "110")
     @Column(name = "initweight", length = 20)
     private Double initWeight;
@@ -54,7 +56,7 @@ public class GeLuoMiUser extends BaseUserEntity {
     @Column(name = "entrywaistline", length = 20)
     private Double entryWaistline;
 
-    @NotBlank(message = "请填写您使用的产品")
+//    @NotBlank(message = "请填写您使用的产品")
     @ApiModelProperty(value = "使用产品" , name = "useProduct" , example = "瘦瘦包")
     @Column(name = "useproduct", length = 20)
     private String useProduct ;

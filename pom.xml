@@ -113,6 +113,14 @@
             <version>1.4.7</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.bouncycastle/com.springsource.org.bouncycastle.jce -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>com.springsource.org.bouncycastle.jce</artifactId>
+            <version>1.46.0</version>
+        </dependency>
+
+
         <!-- https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml -->
         <dependency>
             <groupId>org.apache.poi</groupId>
@@ -212,7 +220,7 @@
                     <encoding>UTF-8</encoding>
                     <compilerArguments>
                         <verbose/>
-                        <bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
+                        <bootclasspath>${java.home}/jre/lib/rt.jar:${java.home}/jre/lib/jce.jar;${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
                     </compilerArguments>
                 </configuration>
             </plugin>

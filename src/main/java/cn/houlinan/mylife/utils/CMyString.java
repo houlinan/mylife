@@ -1931,6 +1931,10 @@ public class CMyString {
 //    }
 
 
+    public static String formatMoblieNumber(String moblieNumber){
+        String result = moblieNumber.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+        return result ;
+    }
 
 
 }

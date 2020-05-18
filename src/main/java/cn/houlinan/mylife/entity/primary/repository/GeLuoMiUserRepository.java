@@ -9,5 +9,7 @@ public interface GeLuoMiUserRepository extends BaseJpaRepository<GeLuoMiUser, Se
 
     GeLuoMiUser findGeLuoMiUserById(String id);
 
+    GeLuoMiUser findGeLuoMiUserByOpenId(String openId);
+
 
 }
