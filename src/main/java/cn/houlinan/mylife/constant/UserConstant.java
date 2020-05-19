@@ -18,4 +18,6 @@ public class UserConstant {
     public static final String USER_NOTDISPLAY_PICS_ROOT_PATH = "C:" + File.separator + File.separator + "mylifeDatas" + File.separator + "userNotDisplayPics" +File.separator ;
 
     public static final String USER_TOKEN_NAME = "myLifeUserLoginToken";
+
+    public static final int USER_LOGIN_TYPE_GELUOMI = 1 ;
 }

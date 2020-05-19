@@ -51,7 +51,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = nativeWebRequest.getNativeRequest(HttpServletRequest.class);
         //2,获取token
         String paramToken = request.getParameter(UserConstant.USER_TOKEN_NAME);
-        String openId = request.getParameter("operId");
+        String openId = request.getParameter("openId");
         String cookieToken = getCookieValue(request, UserConstant.USER_TOKEN_NAME);
         if (StringUtils.isEmpty(paramToken) && StringUtils.isEmpty(cookieToken) && StringUtils.isEmpty(openId)) {
             throw new Exception("请登录");

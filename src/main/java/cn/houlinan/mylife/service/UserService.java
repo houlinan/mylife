@@ -4,6 +4,7 @@ import cn.houlinan.mylife.DTO.UserVO;
 import cn.houlinan.mylife.constant.UserConstant;
 import cn.houlinan.mylife.entity.GeLuoMiUser;
 import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.primary.repository.GeLuoMiUserRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.utils.*;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
@@ -36,6 +37,8 @@ public class UserService {
 
     @Autowired
     RedisOperator redisOperator;
+    @Autowired
+    GeLuoMiUserRepository geLuoMiUserRepository ;
 
     /**
      *DESC:注册使用
@@ -127,6 +130,19 @@ public class UserService {
         usersVO.setUserToken(uniqueToken);
         log.info("将用户【{}】 Token信息放入redis成功" , user.getUserName());
         return usersVO ;
+    }
+
+    public Object getUserDescByUserLoginType(int userLoginTyep , UserVO user ){
+        if (user == null) return null ;
+        switch (userLoginTyep){
+            case UserConstant.USER_LOGIN_TYPE_GELUOMI:
+                GeLuoMiUser geLuoMiUser = geLuoMiUserRepository.findGeLuoMiUserByUserName(user.getUserName());
+                geLuoMiUser.setPassword("");
+                geLuoMiUser.setUserToken(user.getUserToken());
+                 return  geLuoMiUser;
+            default:
+                return user ;
+        }
     }
 
 }

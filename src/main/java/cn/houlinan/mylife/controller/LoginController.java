@@ -60,7 +60,11 @@ public class LoginController {
 
     })
     @ApiOperation(value = "用户登陆", notes = "用户登陆接口")
-    public HHJSONResult login(@RequestParam(value = "userName",required = false) String userName, @RequestParam(value = "passWord" , required = false ) String passWord ,
+    public HHJSONResult login(
+            @RequestParam(value = "userName",required = false) String userName,
+            @RequestParam(value = "passWord" , required = false ) String passWord ,
+            @RequestParam(value = "userLoginType" , defaultValue = "0") int userLoginType ,
+
                               HttpServletResponse res
     ) throws Exception {
 //        String userName = user.getUserName();
@@ -93,6 +97,10 @@ public class LoginController {
         String userToken = usersVO.getUserToken() ;
         CookieUtils.writeCookie(res,UserConstant.USER_TOKEN_NAME,userToken);
 
+        if(userLoginType > 0 ){
+            log.info("用户信息为："+HHJSONResult.ok(userService.getUserDescByUserLoginType(userLoginType, usersVO)));
+            return HHJSONResult.ok(userService.getUserDescByUserLoginType(userLoginType, usersVO));
+        }
 
         log.info("用户【{}】登陆成功，已经跳转到响应页面", userName);
         return HHJSONResult.ok(usersVO);
