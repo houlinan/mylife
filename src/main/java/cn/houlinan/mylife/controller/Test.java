@@ -1,6 +1,7 @@
 package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.utils.RedisOperator;
+import cn.houlinan.mylife.utils.WechatMessageSendUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,10 @@ public class Test {
     public void testSet(){
         redisOperator.set("1" , "22222" , 10000);
 
+    }
+    @RequestMapping("/wechatSend")
+    public String wechatSend(){
+        return  WechatMessageSendUtil.sendMessageByServerChan("123","123123") + "";
     }
 
     @RequestMapping("/xinhuazhiyun")

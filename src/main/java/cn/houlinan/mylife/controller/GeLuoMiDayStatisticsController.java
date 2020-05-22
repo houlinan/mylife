@@ -233,7 +233,7 @@ public class GeLuoMiDayStatisticsController {
 
         if (CMyString.isEmpty(startTime)) {
             Date date = DateUtil.parse(endTime);
-            startTime = DateUtil.format(DateUtil.offset(date, DateField.DAY_OF_MONTH, -1), "yyyy-MM-dd HH:mm:ss");
+            startTime = DateUtil.format(DateUtil.offset(date, DateField.MONTH, -1), "yyyy-MM-dd HH:mm:ss");
         }
         List<GeLuoMiDayStatistics> findResult = geLuoMiDayStatisticsRepository.findAllByStatisticsDateBetweenAndGeluomiUserNameOrderByStatisticsDateAsc(
                 cn.houlinan.mylife.utils.DateUtil.parseDate(startTime),
@@ -258,7 +258,7 @@ public class GeLuoMiDayStatisticsController {
 
         String uuid =UUID.randomUUID().toString() + ".jpg" ;
         String filePath = GeLuoMiConstant.GELUOMI_PICS_PATH + uuid;
-        JFreeChartUtil.createLineChart("用户体重腰围数据折线图(Weight(体重)、Waistline(腰围))", "日期", "数值", ds, filePath);
+        JFreeChartUtil.createLineChart("用户体重腰围数据折线图     (注：Weight(体重)、Waistline(腰围))", "日期", "数值", ds, filePath);
 
         return HHJSONResult.ok(GeLuoMiConstant.HTTPS_GELUOMI_IMG_ADDRESS + uuid );
     }
