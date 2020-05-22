@@ -256,10 +256,11 @@ public class GeLuoMiDayStatisticsController {
         File file = new File(GeLuoMiConstant.GELUOMI_PICS_PATH);
         if (!file.exists()) file.mkdir();
 
-        String filePath = GeLuoMiConstant.GELUOMI_PICS_PATH + UUID.randomUUID().toString() + ".jpg";
-        JFreeChartUtil.createLineChart("用户体重腰围数据折线图", "日期", "数值", ds, filePath);
+        String uuid =UUID.randomUUID().toString() + ".jpg" ;
+        String filePath = GeLuoMiConstant.GELUOMI_PICS_PATH + uuid;
+        JFreeChartUtil.createLineChart("用户体重腰围数据折线图(Weight(体重)、Waistline(腰围))", "日期", "数值", ds, filePath);
 
-        return HHJSONResult.ok(filePath);
+        return HHJSONResult.ok(GeLuoMiConstant.HTTPS_GELUOMI_IMG_ADDRESS + uuid );
     }
 
 

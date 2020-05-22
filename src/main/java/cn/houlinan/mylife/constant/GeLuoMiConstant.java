@@ -14,4 +14,6 @@ public class GeLuoMiConstant {
 
     public static final String GELUOMI_PICS_PATH = "C:" + File.separator + "mylifeDatas" + File.separator + GELUOMI_NAME + File.separator ;
 
+    public static final String HTTPS_GELUOMI_IMG_ADDRESS = "https://www.houlinan.cn/mylife/img/GELUOMI/";
+
 }
