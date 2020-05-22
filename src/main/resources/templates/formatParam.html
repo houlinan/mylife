@@ -61,7 +61,7 @@
                 <div class="row clearfix">
                     <div class="col-md-6 column">
                   <textarea rows="50" cols="80" id="orgText" placeholder="在此输入wcm请求参数...."
-                            style="height: 580px;"></textarea>
+                            style="height: 580px;width: 105%;"></textarea>
 
                         <p>
                             <a class="btn btn-primary btn-large" href="#" onclick="createWCMTest()">生成wcm测试用例代码</a>
@@ -93,7 +93,7 @@
 
         $.ajax({
             type: "get",  // 请求方式
-            url: 'http://localhost:8080/mylife/wcm/createWCMTest',  // 目标资源
+            url: 'https://www.houlinan.cn/mylife/wcm/createWCMTest',  // 目标资源
 
             //  url: 'http://localhost:8080/wcm/createWCMTest',
             data: params, // 请求参数
@@ -149,7 +149,7 @@
 
         $.ajax({
             type: "get",  // 请求方式
-             url: 'http://localhost:8080/mylife/wcm/testFormat',
+            url: 'https://www.houlinan.cn/mylife/wcm/testFormat',
             //url: 'http://localhost:8080/wcm/testFormat',
             data: params, // 请求参数
             dataType: "json",  // 服务器响应的数据类型
