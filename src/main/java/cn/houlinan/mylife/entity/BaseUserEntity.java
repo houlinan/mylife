@@ -28,6 +28,11 @@ public class BaseUserEntity extends BaseEntity {
     @Column(name = "username", length = 60)
     private String userName ;
 
+//    @NotBlank(message = "用户头像")
+    @ApiModelProperty(value = "用户头像" , name = "headPic" , example = "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIsUhghynqYfPexrPiaKjQhicTIGbwkYa7vH0tzkVwIFHTmrT0stqLdia6QK5iarBu5O20QKYdN6R6lSg/132")
+    @Column(name = "headpic", length = 600)
+    private String headPic ;
+
     @NotBlank(message = "用户昵称必填")
     @ApiModelProperty(value = "昵称" , name = "nikeName" , example = "昵称")
     @Column(name = "nikename", length = 60)

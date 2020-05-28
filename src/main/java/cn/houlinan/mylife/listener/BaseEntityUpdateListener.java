@@ -21,7 +21,7 @@ public class BaseEntityUpdateListener {
     @PrePersist
     public void onCreate(BaseEntity baseEntity) {
         String crUser = "";
-        String teamId = "";
+        Long teamId = null;
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (servletRequestAttributes == null)
             return;

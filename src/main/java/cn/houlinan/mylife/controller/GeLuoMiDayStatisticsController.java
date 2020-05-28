@@ -78,7 +78,7 @@ public class GeLuoMiDayStatisticsController {
         );
         if (findResult == null) throw new Exception("没有找到该用户【" + statistTime + "】的数据");
 
-        return HHJSONResult.ok(findResult);
+            return HHJSONResult.ok(findResult);
     }
 
     @GetMapping("/quertListByDateStr")
@@ -110,7 +110,7 @@ public class GeLuoMiDayStatisticsController {
 
         if (CMyString.isEmpty(startTime)) {
             Date date = DateUtil.parse(endTime);
-            startTime = DateUtil.format(DateUtil.offset(date, DateField.DAY_OF_MONTH, -1), "yyyy-MM-dd HH:mm:ss");
+            startTime = DateUtil.format(DateUtil.offset(date, DateField.MONTH, -1), "yyyy-MM-dd HH:mm:ss");
         }
 
         Team team = teamRepository.findTeamByTeamName("test");
@@ -133,7 +133,10 @@ public class GeLuoMiDayStatisticsController {
 
         String titel = "您查询的小组【" + team.getTeamName() + "】查询时间为：" + startTime + " 至 " + endTime + " 的数据! 详见附件和正文";
 
-        MailUtil.send("houlinan@vip.qq.com", titel, "查询结果详见附件哦！",
+//        MailUtil.send("houlinan@vip.qq.com", titel, "查询结果详见附件哦！",
+//                false, excelFile);
+
+        MailUtil.send(emailAddress, titel, "查询结果详见附件哦！",
                 false, excelFile);
 
         return HHJSONResult.ok();
@@ -146,7 +149,7 @@ public class GeLuoMiDayStatisticsController {
         Team test = teamRepository.findTeamByTeamName("test");
         if (test == null) {
             Team team = new Team();
-            team.setId("test");
+            team.setId(1L);
             team.setTeamName("test");
             teamRepository.save(team);
         }
@@ -258,7 +261,7 @@ public class GeLuoMiDayStatisticsController {
 
         String uuid =UUID.randomUUID().toString() + ".jpg" ;
         String filePath = GeLuoMiConstant.GELUOMI_PICS_PATH + uuid;
-        JFreeChartUtil.createLineChart("用户体重腰围数据折线图     (注：Weight(体重)、Waistline(腰围))", "日期", "数值", ds, filePath);
+        JFreeChartUtil.createLineChart("用户【"+userName+"】体重腰围数据折线图     (注：Weight(体重)、Waistline(腰围))", "日期", "数值", ds, filePath);
 
         return HHJSONResult.ok(GeLuoMiConstant.HTTPS_GELUOMI_IMG_ADDRESS + uuid );
     }

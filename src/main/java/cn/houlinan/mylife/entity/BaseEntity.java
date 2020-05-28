@@ -46,7 +46,7 @@ public abstract class BaseEntity implements Serializable {
 
 
     @Column(name = "teamid")
-    private String teamid;
+    private Long teamid;
 
     @ManyToOne
     @JoinColumn(foreignKey = @ForeignKey(name = "none"))

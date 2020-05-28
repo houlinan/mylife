@@ -12,4 +12,6 @@ public interface TeamRepository extends BaseJpaRepository<Team, Serializable> {
     Team findTeamByIdAndTeamPassword(String id , String teamPassword);
 
     Team findTeamById(String id) ;
+
+
 }

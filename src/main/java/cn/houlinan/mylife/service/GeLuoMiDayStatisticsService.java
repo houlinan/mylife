@@ -74,8 +74,8 @@ public class GeLuoMiDayStatisticsService {
             geLuoMiDayStatistics = findResult;
         }
 
-        String teamid = geLuoMiDayStatistics.getTeamid();
-        if (CMyString.isEmpty(teamid) || geLuoMiDayStatistics.getTeam() == null) {
+        Long teamid = geLuoMiDayStatistics.getTeamid();
+        if (teamid  ==  null || geLuoMiDayStatistics.getTeam() == null) {
             geLuoMiDayStatistics.setTeamid(user.getTeamid());
             geLuoMiDayStatistics.setTeam(user.getTeam());
         }

@@ -2,6 +2,9 @@ package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.utils.RedisOperator;
 import cn.houlinan.mylife.utils.WechatMessageSendUtil;
+import cn.hutool.core.thread.ThreadUtil;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +22,7 @@ import java.util.Set;
 @Controller
 @RequestMapping("/test")
 @RestController
+@Slf4j
 public class Test {
 
     @Autowired
@@ -33,6 +37,28 @@ public class Test {
     public String wechatSend(){
         return  WechatMessageSendUtil.sendMessageByServerChan("123","123123") + "";
     }
+
+
+    @RequestMapping("/testSync")
+    public String testSync()throws Exception{
+        log.info("进入方法");
+        //执行异步方法
+        ThreadUtil.execAsync(() -> execAsync());
+
+        log.info("方法结束");
+        return "成功";
+    }
+
+    public void execAsync(){
+        try {
+            Thread.sleep(4000);
+            log.info("执行异步中");
+        }catch (Exception e){
+        }
+    }
+
+
+
 
     @RequestMapping("/xinhuazhiyun")
     public String testXHZY(){

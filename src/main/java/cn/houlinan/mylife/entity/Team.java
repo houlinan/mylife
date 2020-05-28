@@ -1,16 +1,18 @@
 package cn.houlinan.mylife.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -28,10 +30,27 @@ import javax.persistence.Table;
 })
 @Builder
 @Entity
-public class Team extends BaseEntity{
+public class Team implements Serializable {
 
 
     private static final long serialVersionUID = 5458698096863590604L;
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id ;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "crtime", updatable = false)
+    @CreationTimestamp
+    private Date crTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updatetime", updatable = true)
+    @UpdateTimestamp
+    private Date updateTime;
 
     @NotBlank(message = "小组名称必传")
     @ApiModelProperty(value = "小组名称" , name = "teamName" , example = "这是一个帅气的小组")
@@ -41,6 +60,10 @@ public class Team extends BaseEntity{
     @ApiModelProperty(value = "小组密码" , name = "teamPassword" , example = "123456")
     @Column(name = "teampassword", length = 100)
     private String teamPassword ;
+
+    @ApiModelProperty(value = "小组描述" , name = "teamDesc" , example = "123456")
+    @Column(name = "teamdesc", length = 100)
+    private String teamDesc ;
 
     @ApiModelProperty(value = "小组邮箱" , name = "teamEmail" , example = "team@qq.com")
     @Column(name = "teamemail", length = 100)

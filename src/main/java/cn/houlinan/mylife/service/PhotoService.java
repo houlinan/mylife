@@ -70,7 +70,7 @@ public class PhotoService {
 
 
     public Photo uploadPic(MultipartFile files, String path, String photoAlbumId,
-                           String fromUserId, String teamId, boolean onlySaveZipFile
+                           String fromUserId, Long teamId, boolean onlySaveZipFile
 //                           PhotoAlbum photoAlbum
     ) {
 

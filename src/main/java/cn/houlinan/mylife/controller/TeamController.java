@@ -14,10 +14,15 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -49,18 +54,17 @@ public class TeamController {
             @ApiImplicitParam(name = "teamPassword", value = "小组密码", required = true, dataType = "String", paramType="query", defaultValue = "123456"),
             @ApiImplicitParam(name = "teamEmail", value = "小组邮箱", required = false, dataType = "String",paramType="query", defaultValue = "houlinan@vip.qq.com"),
             @ApiImplicitParam(name = "isSendAllUser", value = "是否发送所有人", required = false, dataType = "String", paramType="query", defaultValue = "1"),
+            @ApiImplicitParam(name = "teamDesc", value = "小组描述", required = false, dataType = "String", paramType="query", defaultValue = "这里是一个帅气的描述")
     })
     @ResponseBody
     public HHJSONResult createTeam(
-            TeamVO teamVO ,@RequestParam(value = "userId",required = false) String userId
+            TeamVO teamVO ,User user
 //            @RequestParam(name = "teamName",required = false)  String teamName,
 //                                   @RequestParam(name = "teamPassword",required = false ) @NotBlank(message = "小组密码必传") String teamPassword,
 //                                   @RequestParam(name = "teamEmail" , required = false) String teamEmail,
 //                                   @RequestParam(name = "isSendAllUser", required = false) Integer isSendAllUser
     ) throws Exception {
 
-        User user = userRepository.findUserById(userId);
-        if(user == null) return HHJSONResult.errorMsg("没有找到您的用户信息");
         BeanValidator.check(teamVO);
         Team team = new Team( );
         BeanUtils.copyProperties(teamVO, team);
@@ -81,7 +85,7 @@ public class TeamController {
                                      User user  ){
 
 
-        if(user.getTeam() != null || !CMyString.isEmpty(user.getTeamid()) ) return HHJSONResult.errorMsg("请先取消自己的组织");
+        if(user.getTeam() != null || user.getTeamid() != null ) return HHJSONResult.errorMsg("请先取消自己的组织");
 
         User adminUser = userRepository.findUserByUserName(adminUserName) ;
         if(adminUser == null)  return HHJSONResult.errorMsg("没有找到【" + adminUserName + "】的用户");
@@ -120,6 +124,7 @@ public class TeamController {
 
         return HHJSONResult.ok(user) ;
     }
+
     @ApiOperation(value = "验证小组是否正确", notes = "验证小组是否正确\"")
     @GetMapping("/checkTeam")
     @ApiImplicitParams({
@@ -136,5 +141,35 @@ public class TeamController {
         return HHJSONResult.ok(teamByIdAndTeamPassword.getTeamName());
     }
 
+
+    @ApiOperation(value = "查询小组内其他成员", notes = "查询小组内其他成员")
+    @GetMapping("/queryTeamUsers")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openId", value = "openId", required = true, dataType = "String", paramType="query", defaultValue = "123456")
+          })
+    @ResponseBody
+    public HHJSONResult queryTeamUsers(User user){
+
+        return HHJSONResult.ok(  userRepository.findUsersByTeamid(user.getTeamid()).stream().map(a -> a.getUserName()).collect(Collectors.toList()));
+    }
+
+
+
+
+    @ApiOperation(value = "查询小组内其他成员", notes = "查询小组内其他成员")
+    @GetMapping("/queryTeamUsersToJson")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openId", value = "openId", required = true, dataType = "String", paramType="query", defaultValue = "123456")
+    })
+    @ResponseBody
+    public HHJSONResult queryTeamUsersToJson(User user){
+        JSONArray reuslt = new JSONArray();
+        userRepository.findUsersByTeamid(user.getTeamid()).forEach(a ->{
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("userName" , a.getUserName());
+            reuslt.add(jsonObject);
+        });
+        return HHJSONResult.ok(  reuslt);
+    }
 
 }

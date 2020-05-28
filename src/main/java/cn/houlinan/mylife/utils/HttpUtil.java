@@ -1,12 +1,15 @@
 package cn.houlinan.mylife.utils;
 
+import com.google.common.net.MediaType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 public class HttpUtil {
 	
@@ -72,4 +75,11 @@ public class HttpUtil {
             return false; //502 ,500是不能正常返回结果的，需要catch住，返回一个false
         }
 	}
+
+
+
+
+
+
+
 }

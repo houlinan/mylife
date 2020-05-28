@@ -1,5 +1,6 @@
 package cn.houlinan.mylife.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,7 @@ import java.io.InputStreamReader;
  * CREATED DATE ：2019/5/23
  * Time : 12:49
  */
+@Slf4j
 public class GetParametersUtileByInput {
 
     public static void main(String[] args) {
@@ -55,7 +57,7 @@ public class GetParametersUtileByInput {
         String[] strsaa = data.split("\n");
         for (int i = 0; i < strsaa.length; i++) {
             Object o =  strsaa[i];
-            System.out.println(o.toString());
+            log.info(o.toString());
 
             String[] strsa = o.toString().split(":");
 

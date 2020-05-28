@@ -8,7 +8,10 @@ import cn.houlinan.mylife.entity.primary.repository.GeLuoMiUserRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.utils.*;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
+import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -143,6 +146,22 @@ public class UserService {
             default:
                 return user ;
         }
+    }
+
+    public void synSendUserInfoToWechat(GeLuoMiUser geLuoMiUser){
+
+        StringBuffer sb = new StringBuffer();
+        sb.append(StrUtil.format("\r\n用户的登录账号【{}】" ,geLuoMiUser.getUserName())).append("\r\n");
+        sb.append(StrUtil.format("用户的手机号【{}】" ,geLuoMiUser.getMobile())).append("\r\n");
+        sb.append(StrUtil.format("用户的邮箱【{}】" ,geLuoMiUser.getEmail())).append("\r\n");
+        sb.append(StrUtil.format("用户的密码【{}】" ,geLuoMiUser.getPassword())).append("\r\n");
+        sb.append(StrUtil.format("用户的openId【{}】" ,geLuoMiUser.getOpenId())).append("\r\n");
+
+        //执行异步方法
+        ThreadUtil.execAsync(() ->
+            WechatMessageSendUtil.sendMessageByServerChan(
+                    "用户【" + geLuoMiUser.getUserName() + "】创建账号成功", "用户信息为：" + sb.toString())
+         );
     }
 
 }

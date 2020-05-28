@@ -3,6 +3,7 @@ package cn.houlinan.mylife.controller;
 import cn.houlinan.mylife.utils.AesCbcUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/wx")
+@Slf4j
 public class WechatController {
 
 
@@ -82,7 +84,7 @@ public class WechatController {
                 userInfo.put("avatarUrl", userInfoJSON.get("avatarUrl"));
                 userInfo.put("unionId", userInfoJSON.get("unionId"));
                 map.put("userInfo", userInfo);
-                System.out.println(map.toString());
+                log.info(map.toString());
                 return map;
             }
         } catch (Exception e) {

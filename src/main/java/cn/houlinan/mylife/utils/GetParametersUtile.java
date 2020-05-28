@@ -1,8 +1,10 @@
 package cn.houlinan.mylife.utils;
 
 import com.sun.org.apache.xml.internal.security.keys.content.DEREncodedKeyValue;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.jfree.util.Log;
 import org.springframework.util.StringUtils;
 import sun.security.util.DerEncoder;
 
@@ -19,6 +21,7 @@ import java.util.List;
  * CREATED DATE ：2019/5/23
  * Time : 12:49
  */
+@Slf4j
 public class GetParametersUtile {
 
 
@@ -27,11 +30,11 @@ public class GetParametersUtile {
         String path = "C:\\Users\\houlinan\\Desktop\\appPram.txt" ;
         String result = readTxt(path).toString() ;
 
-        System.out.println(result);
+        log.info(result);
         //\uFEFF
         result = "\"" + StringEscapeUtils.escapeJson(result)+"\";";
         String newResult = result.replace("\\uFEFF","") ;
-        System.out.println(newResult);
+        log.info(newResult);
 
     }
 
@@ -93,11 +96,11 @@ public class GetParametersUtile {
                 }
                 br.close();
             } else {
-                System.out.println("文件不存在!");
+               log.error("文件不存在!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("文件读取错误!");
+            log.error("文件读取错误!");
         }
 
         return result ;

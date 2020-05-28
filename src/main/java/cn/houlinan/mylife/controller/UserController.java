@@ -1,24 +1,25 @@
 package cn.houlinan.mylife.controller;
 
+import cn.houlinan.mylife.constant.UserConstant;
+import cn.houlinan.mylife.entity.GeLuoMiUser;
 import cn.houlinan.mylife.entity.User;
+import cn.houlinan.mylife.entity.primary.repository.GeLuoMiUserRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.service.UserService;
 import cn.houlinan.mylife.utils.CMyString;
 import cn.houlinan.mylife.utils.HHJSONResult;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import cn.hutool.core.util.StrUtil;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * DESC：
@@ -38,6 +39,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    GeLuoMiUserRepository geLuoMiUserRepository ;
     /**
      * DESC:用户注册
      *
@@ -82,6 +85,46 @@ public class UserController {
         if (userByUserName != null) return HHJSONResult.errorMsg("该用户名称已经被使用");
         return HHJSONResult.ok();
     }
+
+
+    @ApiOperation(value = "获取用户权限列表", notes = "获取用户权限列表")
+    @RequestMapping("/getUserTypes")
+    public HHJSONResult getUserTypes() {
+        JSONArray result = new JSONArray() ;
+        Map<String, Integer> userTypeMap = UserConstant.getUserTypeMap();
+        userTypeMap.forEach((k , v) -> {
+            JSONObject jsonObject = new JSONObject( );
+            jsonObject.put("desc" , k);
+            jsonObject.put("value" , v);
+            result.add(jsonObject);
+        });
+        return HHJSONResult.ok(result);
+    }
+
+
+
+    @ApiOperation(value = "设置用户权限", notes = "设置用户权限")
+    @GetMapping("/setUserType")
+    public HHJSONResult setUserType(
+            @RequestParam(name = "userName" , required = false )String userName ,
+            @RequestParam(name = "userType" ,required = false )int userType
+    ) {
+        User userByUserName = userRepository.findUserByUserName(userName);
+        if(userByUserName == null) return HHJSONResult.errorMsg(StrUtil.format("没有找到【{}】的用户信息", userName));
+
+        userByUserName.setUserType(userType);
+        userRepository.save(userByUserName);
+
+        GeLuoMiUser geLuoMiUserByUserName = geLuoMiUserRepository.findGeLuoMiUserByUserName(userName);
+        if(geLuoMiUserByUserName != null){
+            geLuoMiUserByUserName.setUserType(userType);
+            geLuoMiUserRepository.save(geLuoMiUserByUserName);
+        }
+
+        return HHJSONResult.ok();
+    }
+
+
 
 
 }

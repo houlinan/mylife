@@ -39,9 +39,6 @@ public class TeamService {
     @Autowired
     GeLuoMiUserService geLuoMiUserService ;
 
-    @Autowired
-    Sid sid;
-
 
     /**
      *DESC:创建小组
@@ -56,7 +53,7 @@ public class TeamService {
      *@date:
     */
     @Transactional
-    public Team createTeam(String teamId , String teamName , String teamPassword
+    public Team createTeam(Long teamId , String teamName , String teamPassword
             , String teamEmail , User user , Integer isSendAllUser){
 
         Team team = Team.builder()
@@ -74,20 +71,24 @@ public class TeamService {
 
     public Team createTeam(Team team , User user){
 
-        if(CMyString.isEmpty(team.getId()) || "0".equals(team.getId())) {
-            String uid = sid.nextShort() ;
-            team.setId(uid);
+        if(team.getId() == null || "0".equals(team.getId())) {
             team.setPicsPath(TeamConstant.TEAM_PICS_ROOT_PATH + team.getId());
             team.setCrTime(new Date());
             team.setUpdateTime(new Date());
             team.setAdminUserId(user.getId());
-            team.setTeamid(uid);
         }
         teamRepository.save(team);
 
         user.setTeamid(team.getId());
         user.setTeam(team);
         userRepository.save(user);
+
+        GeLuoMiUser geLuoMiUserByUserName = geLuoMiUserRepository.findGeLuoMiUserByUserName(user.getUserName());
+        if(geLuoMiUserByUserName != null){
+            geLuoMiUserByUserName.setTeam(team);
+            geLuoMiUserByUserName.setTeamid(team.getId());
+            geLuoMiUserRepository.save(geLuoMiUserByUserName);
+        }
 
         return team ;
     }

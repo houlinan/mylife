@@ -10,16 +10,15 @@ import cn.houlinan.mylife.entity.primary.repository.TeamRepository;
 import cn.houlinan.mylife.entity.primary.repository.UserRepository;
 import cn.houlinan.mylife.service.GeLuoMiUserService;
 import cn.houlinan.mylife.service.UserService;
-import cn.houlinan.mylife.utils.BeanValidator;
-import cn.houlinan.mylife.utils.CMyString;
-import cn.houlinan.mylife.utils.CookieUtils;
-import cn.houlinan.mylife.utils.HHJSONResult;
+import cn.houlinan.mylife.utils.*;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
+import cn.hutool.core.thread.ThreadUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -82,6 +81,7 @@ public class GeLuoMiUserController {
                 log.info("没有找到{}的小组信息，用户{}绑定失败" , teamid ,geLuoMiUser.getUserName() );
             }
         }
+        userService.synSendUserInfoToWechat(geLuoMiUser);
 
         return HHJSONResult.ok(userService.geLuoMiUserLogin(geLuoMiUser , res ));
     }

@@ -105,7 +105,7 @@ public class HPShopController {
             hpShop.setId(sid.nextShort());
             hpShop.setCrTime(new Date());
             hpShop.setUpdateTime(new Date());
-            hpShop.setTeamid("");
+            hpShop.setTeamid(0L);
             hpShopRepository.save(hpShop);
 
             return HHJSONResult.ok(hpShop);

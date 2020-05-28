@@ -26,6 +26,9 @@ public class TeamVO {
     @ApiModelProperty(value = "小组名称" , name = "teamName" , example = "这是一个帅气的小组")
     private String teamName ;
 
+    @ApiModelProperty(value = "小组描述" , name = "teamdesc" , example = "这是一个帅气的小组")
+    private String teamDesc ;
+
     @NotBlank(message = "小组密码必传")
     @ApiModelProperty(value = "小组密码" , name = "teamPassword" , example = "123456")
     private String teamPassword ;

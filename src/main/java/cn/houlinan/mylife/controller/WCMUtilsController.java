@@ -10,6 +10,7 @@ import com.google.gson.JsonParser;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +30,7 @@ import java.util.Enumeration;
  */
 @RequestMapping("/wcm")
 @Controller
+@Slf4j
 public class WCMUtilsController {
 
     @Value("${wcm.forward.address}")
@@ -95,7 +97,7 @@ public class WCMUtilsController {
                         "\t\t}";
 
 
-                System.out.println(testStr);
+                log.info(testStr);
                 return HHJSONResult.ok(testStr);
             }
         }
@@ -118,7 +120,7 @@ public class WCMUtilsController {
     public JSONObject WCMTestFormatJSONUtils(@RequestParam(name = "data", required = false) String data) {
 
 
-        System.out.println(data);
+        log.info(data);
         JSONObject format = GetParametersUtileByInput.format(data);
 
         return format;
@@ -154,7 +156,7 @@ public class WCMUtilsController {
             result.put(paraName, request.getParameter(paraName));
         }
         String resultStr = formatJSON(result.toString());
-        System.out.println(resultStr);
+        log.info(resultStr);
         return resultStr;
     }
 

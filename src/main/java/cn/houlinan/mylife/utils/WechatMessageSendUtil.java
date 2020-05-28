@@ -37,7 +37,6 @@ public class WechatMessageSendUtil {
     public static JSONObject sendMessageByServerChan(String title , String desp){
 
         String sendUrl =stServerChanBaseHost + stServerChanCDKey + ".send?" ;
-
         String s = HttpUtil.get(sendUrl + "text=" + title + "&desp=" + desp);
         log.info("**********************  WechatMessageSendUtil **************************");
         log.info("准备给微信发送消息，发送的url为：" +sendUrl + "text=" + title + "&desp=" + desp );
