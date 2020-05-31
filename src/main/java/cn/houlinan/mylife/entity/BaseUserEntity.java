@@ -4,10 +4,9 @@ import cn.houlinan.mylife.listener.BaseEntityUpdateListener;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.EntityListeners;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
@@ -70,5 +69,8 @@ public class BaseUserEntity extends BaseEntity {
     @ApiModelProperty(value = "用户类型，9超级管理员，1管理员，0普通用户" , name = "userType" , example = "0")
     @Column(name = "userType", length = 2 ,columnDefinition = "int(2) default 0")
     private int userType ;
+
+
+
 
 }

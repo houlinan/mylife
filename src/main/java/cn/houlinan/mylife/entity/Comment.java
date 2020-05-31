@@ -17,16 +17,24 @@ import javax.persistence.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "hpcomment", indexes = {
+@Table(name = "comment", indexes = {
         @Index(name = "id", columnList = "id")
 })
 @Builder
 @Entity
-public class HPComment extends BaseEntity{
+public class Comment extends BaseEntity{
 
     @ApiModelProperty(value = "商品id" , name = "productId" , example = "1")
     @Column(name = "productid", length = 150 )
     private String productId ;
+
+    @ApiModelProperty(value = "评论类型" , name = "messageType" , example = "1")
+    @Column(name = "messagetype", length = 2 ,columnDefinition = "int(2) default 0")
+    private int messageType ;
+
+    @ApiModelProperty(value = "是否已经被处理过" , name = "hasProcessed" , example = "1")
+    @Column(name = "hasprocessed", length = 2 ,columnDefinition = "int(2) default 0")
+    private int hasProcessed ;
 
     @ApiModelProperty(value = "评论内容" , name = "comment" , example = "1")
     @Column(name = "comment", length = 500 )
@@ -41,20 +49,7 @@ public class HPComment extends BaseEntity{
     @JoinColumn(foreignKey = @ForeignKey(name = "none"))
     private User commentUser ;
 
-    @ApiModelProperty(value = "店主用户" , name = "shopAdminUser" , example = "15156saddsa181123")
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "none"))
-    private User shopAdminUser ;
 
-    @ApiModelProperty(value = "来源店铺" , name = "fromShop" , example = "15156saddsa181123")
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "none"))
-    private HPShop fromShop;
-
-    @ApiModelProperty(value = "来源商品" , name = "fromProduct" , example = "15156saddsa181123")
-    @ManyToOne
-    @JoinColumn(foreignKey = @ForeignKey(name = "none"))
-    private HPProduct fromProduct ;
 
 
 }

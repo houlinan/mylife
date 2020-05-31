@@ -72,8 +72,8 @@ public class LoggingWSServer {
                                 .replaceAll(">", ">")
                                 .replaceAll("\"", "\"" );
 
-                                        //处理等级
-                                        line = line.replace("DEBUG", "<span style='color: blue;'>DEBUG</span>");
+                        //处理等级
+                        line = line.replace("DEBUG", "<span style='color: blue;'>DEBUG</span>");
                         line = line.replace("INFO", "<span style='color: green;'>INFO</span>");
                         line = line.replace("WARN", "<span style='color: orange;'>WARN</span>");
                         line = line.replace("ERROR", "<span style='color: red;'>ERROR</span>");

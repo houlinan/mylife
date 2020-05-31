@@ -20,6 +20,7 @@ public class UserConstant {
      * session中用户的标识
      * */
     public static final String SESSION_LOGIN_USER = "SESSION_USER_NAME";
+    public static final String RESET_USER_ERROR_TIME = "RESET_USER_ERROR_TIME";
 
     public static final String USER_NOTDISPLAY_PICS_ROOT_PATH = "C:" + File.separator + File.separator + "mylifeDatas" + File.separator + "userNotDisplayPics" +File.separator ;
 

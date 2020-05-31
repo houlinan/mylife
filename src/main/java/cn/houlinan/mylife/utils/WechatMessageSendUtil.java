@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * DESC：
  * CREATED BY ：@hou.linan
@@ -36,8 +39,16 @@ public class WechatMessageSendUtil {
 
     public static JSONObject sendMessageByServerChan(String title , String desp){
 
-        String sendUrl =stServerChanBaseHost + stServerChanCDKey + ".send?" ;
-        String s = HttpUtil.get(sendUrl + "text=" + title + "&desp=" + desp);
+//        String sendUrl =stServerChanBaseHost + stServerChanCDKey + ".send?" ;
+//        String s = HttpUtil.get(sendUrl + "text=" + title + "&desp=" + desp);
+
+        String sendUrl =stServerChanBaseHost + stServerChanCDKey + ".send" ;
+        Map<String , Object > params = new HashMap<>();
+        params.put("text" , title);
+        params.put("desp" , desp);
+        String s = HttpUtil.post(sendUrl ,params );
+
+
         log.info("**********************  WechatMessageSendUtil **************************");
         log.info("准备给微信发送消息，发送的url为：" +sendUrl + "text=" + title + "&desp=" + desp );
         log.info("准备给微信发送消息，返回值为：" +UnicodeUtil.unicodeToString(s));
