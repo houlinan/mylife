@@ -195,7 +195,7 @@ public class MessageController {
 
         commentById.setHasProcessed(CommentConstant.COMMENT_HAH_PROCESSED_TRUE);
         commentRepository.save(commentById);
-        log.info("处理评论【{}】。处理的结果是：【{}】成功：请查收" ,comment.getComment() ,data);
+        log.info("处理评论【{}】。处理的结果是：【{}】成功：请查收" ,commentById.getComment() ,data);
         return HHJSONResult.ok();
     }
 

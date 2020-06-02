@@ -103,7 +103,7 @@ public class GeLuoMiDayStatisticsController {
             @RequestParam(name = "startTime", required = false) String startTime,
             @RequestParam(name = "endTime", required = false) String endTime,
             @RequestParam(name = "emailAddress", required = false) String emailAddress,
-            @RequestParam(name = "userNames", required = false) String userNames
+            @RequestParam(name = "userNames", required = false) String userNames,User user
     ) throws Exception {
 
         if (CMyString.isEmpty(endTime)) endTime = DateUtil.formatDateTime(new Date());
@@ -113,7 +113,8 @@ public class GeLuoMiDayStatisticsController {
             startTime = DateUtil.format(DateUtil.offset(date, DateField.MONTH, -1), "yyyy-MM-dd HH:mm:ss");
         }
 
-        Team team = teamRepository.findTeamByTeamName("test");
+        Team team = user.getTeam();
+        if(team == null ) return HHJSONResult.errorMsg("您还没有绑定小组信息，请稍后重试");
 
         List<GeLuoMiDayStatistics> test = geLuoMiDayStatisticsRepository.findAllByStatisticsDateBetweenAndTeam(
                 cn.houlinan.mylife.utils.DateUtil.parseDate(startTime),

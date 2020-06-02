@@ -21,10 +21,32 @@ public class ExceptionHandle {
     @ResponseBody
     public HHJSONResult handle(Exception e) {
         log.info("进入error");
-
-
         e.printStackTrace();
+
+        String result;
+        String stackTrace = getStackTraceString(e);
+        String exceptionType = e.toString();
+        String exceptionMessage = e.getMessage();
+
+        log.error(String.format("%s : %s \r\n %s", exceptionType, exceptionMessage, stackTrace));
+
         return  HHJSONResult.errorMsg(e.getMessage());
+    }
+
+    //打印异常堆栈信息
+    public static String getStackTraceString(Throwable ex){//(Exception ex) {
+        StackTraceElement[] traceElements = ex.getStackTrace();
+
+        StringBuilder traceBuilder = new StringBuilder();
+
+        if (traceElements != null && traceElements.length > 0) {
+            for (StackTraceElement traceElement : traceElements) {
+                traceBuilder.append(traceElement.toString());
+                traceBuilder.append("\n");
+            }
+        }
+
+        return traceBuilder.toString();
     }
 
 }
