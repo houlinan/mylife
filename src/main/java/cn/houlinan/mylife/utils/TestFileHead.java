@@ -1,8 +1,6 @@
 package cn.houlinan.mylife.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -138,10 +136,37 @@ public class TestFileHead {
     }
 
     public static void main(String[] args) throws Exception {
-        String type = getFileType("C:\\Users\\houli\\Desktop\\Paper.doc");
-        System.out.println("Except : " + type);
-        System.out.println();
+//        String type = getFileType("C:\\Users\\houli\\Desktop\\Paper.doc");
+//        System.out.println("Except : " + type);
+//        System.out.println();
+        System.out.println(txt2String());
     }
+
+
+    public static String txt2String()throws Exception{
+        File file = new File("C:\\Users\\houlinan\\Desktop\\txt2String.txt");
+        String tableName = "tmymedia";
+        StringBuilder result = new StringBuilder("ALTER TABLE "+tableName+"  MODIFY COLUMN `crtime` datetime DEFAULT NULL COMMENT '创建时间';\n" +
+                "ALTER TABLE "+tableName+" MODIFY COLUMN `cruser` VARCHAR ( 60 ) DEFAULT NULL COMMENT '创建人';\n" +
+                "ALTER TABLE "+tableName+"  MODIFY COLUMN `tenantid` BIGINT ( 20 ) DEFAULT NULL COMMENT '租户id';\n" +
+                "ALTER TABLE "+tableName+"  MODIFY COLUMN `updatetime` datetime DEFAULT NULL COMMENT '更新时间';\n" +
+                "ALTER TABLE "+tableName+"  MODIFY COLUMN `updateuser` VARCHAR ( 60 ) DEFAULT NULL COMMENT '更新人';\n");
+        try{
+            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件
+            String s = null;
+            while((s = br.readLine())!=null){//使用readLine方法，一次读一行
+                if(s.endsWith(",")){
+                    s = s.substring(0 , s.length()-1);
+                }
+                result.append( "ALTER TABLE "+tableName+"  MODIFY COLUMN " + s + " COMMENT '更新人'\n" );
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result.toString();
+    }
+
 
 
 }

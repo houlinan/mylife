@@ -26,7 +26,7 @@ public class SchedulerTask {
 
 
     //cron表达式：每隔5秒执行一次
-    @Scheduled(cron = "0 00 00 * * ?")
+    @Scheduled(cron = "0 01 00 * * ?")
     public void scheduled(){
         //零点重置用户错误次数
         resetUserErrorTimeService.ResetUserErrorTime();

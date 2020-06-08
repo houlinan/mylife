@@ -13,6 +13,7 @@ import cn.houlinan.mylife.service.UserService;
 import cn.houlinan.mylife.utils.*;
 import cn.houlinan.mylife.utils.org.n3r.idworker.Sid;
 import cn.hutool.core.thread.ThreadUtil;
+import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -58,7 +59,7 @@ public class GeLuoMiUserController {
     @ApiOperation(value = "创建格洛米用户", notes = "创建格洛米用户接口")
     public HHJSONResult createUser(GeLuoMiUser geLuoMiUser ,
                                    @RequestParam(name = "teamid" , required = false)String teamid ,
-                                    @RequestParam(name = "teamPassword", required = false)String teamPassword ,
+                                   @RequestParam(name = "teamPassword", required = false)String teamPassword ,
                                    HttpServletResponse res)throws Exception{
 
         BeanValidator.check(geLuoMiUser);
@@ -101,5 +102,68 @@ public class GeLuoMiUserController {
         if(geLuoMiUserByOpenId == null)  return HHJSONResult.errorMsg("获取获取到相关的用户信息");
 
         return HHJSONResult.ok(userService.geLuoMiUserLogin(geLuoMiUserByOpenId , res ));
+    }
+
+
+    @GetMapping("/bindUserByOpenId")
+    @ApiOperation(value = "通过openId绑定用户", notes = "通过openId绑定用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "openId", value = "openId", dataType = "String", paramType = "query", defaultValue = "oRnZI43JJpc1VUNYrjnR2uuDi8eA"),
+            @ApiImplicitParam(name = "userName", value = "userName", dataType = "String", paramType = "query", defaultValue = "houlinan"),
+            @ApiImplicitParam(name = "password", value = "password", dataType = "String", paramType = "query", defaultValue = "123"),
+    })
+    public HHJSONResult bindUserByOpenId(
+            @RequestParam(name = "openId", required = false) String openId ,
+            @RequestParam(name = "userName", required = false) String userName ,
+            @RequestParam(name = "password", required = false) String password
+    ) throws Exception {
+
+        if(CMyString.isEmpty(openId)) return HHJSONResult.errorMsg("请授权后重试，获取用户微信账号失败");
+        if(CMyString.isEmpty(userName)) return HHJSONResult.errorMsg("请输入账号");
+        if(CMyString.isEmpty(password)) return HHJSONResult.errorMsg("请输入密码");
+
+        User user = userRepository.findUserByUserName(userName);
+        if(user == null ) return HHJSONResult.errorMsg(StrUtil.format("未找到【{}】的用户信息" , userName));
+
+        if(!password.equals(user.getPassword()))
+            return HHJSONResult.errorMsg(StrUtil.format("用户【{}】的密码错误。请确认后重试"));
+
+        user.setOpenId(openId);
+        userRepository.save(user);
+
+        GeLuoMiUser geLuoMiUserByUserName = geLuoMiUserRepository.findGeLuoMiUserByUserName(userName);
+        if(geLuoMiUserByUserName != null){
+            geLuoMiUserByUserName.setOpenId(openId);
+            geLuoMiUserRepository.save(geLuoMiUserByUserName);
+        }
+        return HHJSONResult.ok();
+    }
+
+
+
+    @ResponseBody
+    @PostMapping("/createOtherUser")
+    @ApiOperation(value = "创建其他格洛米用户", notes = "创建其他格洛米用户")
+    public HHJSONResult createOtherUser(GeLuoMiUser geLuoMiUser ,   User user){
+
+        BeanValidator.check(geLuoMiUser);
+
+        User userByUserName = userRepository.findUserByUserName(geLuoMiUser.getUserName());
+        if(userByUserName != null) return HHJSONResult.errorMsg("用户【" + userByUserName.getUserName() + "】已经存在");
+        GeLuoMiUser geLuoMiUser1 = geLuoMiUserService.saveUser(geLuoMiUser);
+        userByUserName = userRepository.findUserByUserName(geLuoMiUser.getUserName());
+        Team teamByIdAndTeamPassword = user.getTeam();
+        if(teamByIdAndTeamPassword != null){
+            geLuoMiUser1.setTeam(teamByIdAndTeamPassword);
+            geLuoMiUser1.setTeamid(teamByIdAndTeamPassword.getId());
+            geLuoMiUserRepository.save(geLuoMiUser1);
+            userByUserName.setTeamid(teamByIdAndTeamPassword.getId());
+            userByUserName.setTeam(teamByIdAndTeamPassword);
+            userRepository.save(userByUserName);
+        }
+
+        userService.synSendUserInfoToWechat(geLuoMiUser);
+
+        return HHJSONResult.ok(geLuoMiUser);
     }
 }

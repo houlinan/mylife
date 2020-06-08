@@ -65,9 +65,14 @@ public class MessageController {
 
         User userByOpenId = userRepository.findUserByOpenId(openId);
         if(userByOpenId != null ){
+            String errorTimeStr = redisOperator.get(UserConstant.RESET_USER_ERROR_TIME + ":" + userByOpenId.getId());
+            if(!CMyString.isEmpty(errorTimeStr)){
+                int errorTimes = Integer.valueOf(errorTimeStr);
+                if(errorTimes > userErrorTimes ) return HHJSONResult.errorMsg("今日您的发送已经超出了限制次数");
+            }
 
-            int errorTimes = Integer.valueOf(redisOperator.get(UserConstant.RESET_USER_ERROR_TIME + ":" + userByOpenId.getId()));
-            if(errorTimes > userErrorTimes ) return HHJSONResult.errorMsg("今日您的发送已经超出了限制次数");
+
+
         }
 
         if(CMyString.isEmpty(message)) return HHJSONResult.errorMsg("请输入内容哦！");
