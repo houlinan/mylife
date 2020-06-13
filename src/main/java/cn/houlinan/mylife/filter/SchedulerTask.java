@@ -6,6 +6,7 @@ package cn.houlinan.mylife.filter;
  * CREATED DATE ：2020/5/30
  * Time : 23:55
  */
+import cn.houlinan.mylife.service.DatabaseBackup;
 import cn.houlinan.mylife.service.SchedulerTaskService.ResetUserErrorTimeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,13 @@ public class SchedulerTask {
     @Autowired
     ResetUserErrorTimeService resetUserErrorTimeService ;
 
-
     //cron表达式：每隔5秒执行一次
     @Scheduled(cron = "0 01 00 * * ?")
     public void scheduled(){
         //零点重置用户错误次数
         resetUserErrorTimeService.ResetUserErrorTime();
+        //备份数据库
+        DatabaseBackup.backup();
     }
 
 }

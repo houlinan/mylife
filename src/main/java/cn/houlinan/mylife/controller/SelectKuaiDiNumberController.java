@@ -1,5 +1,6 @@
 package cn.houlinan.mylife.controller;
 
+import cn.houlinan.mylife.service.kuaidi.ExpressService;
 import cn.houlinan.mylife.service.kuaidi.InitService;
 import cn.houlinan.mylife.service.kuaidi.QueryKuaiDiByNumberService;
 import cn.houlinan.mylife.utils.HHJSONResult;
@@ -32,6 +33,9 @@ public class SelectKuaiDiNumberController {
     @Autowired
     QueryKuaiDiByNumberService queryKuaiDiByNumberService;
 
+    @Autowired
+    ExpressService expressService;
+
     @GetMapping("/queryKuaiDiByNumber")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "expName", value = "快递公司名称", required = true, dataType = "String", paramType = "query", defaultValue = "中通快递"),
@@ -41,10 +45,7 @@ public class SelectKuaiDiNumberController {
     public HHJSONResult sendToMe(@RequestParam(name = "expName", required = false) String expName,
                                  @RequestParam(name = "expNo", required = false) String expNo) throws Exception {
 
-        String expCode = InitService.KuaiDiCodeMap.get(expName);
-        log.info("正在查询快递公司：【{}】  快递公司code：【{}】快递单号：【{}】", expName, expCode, expNo);
-        String orderTracesByJson = queryKuaiDiByNumberService.getOrderTracesByJson(expCode, expNo);
-        log.info("查询快递的结果为:" + JSONUtil.formatJsonStr(orderTracesByJson));
+        String orderTracesByJson = expressService.queryExpressByNameAndNumber(expName, expNo);
 
         return HHJSONResult.ok(JSONUtil.parseObj(orderTracesByJson));
     }

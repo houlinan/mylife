@@ -2,15 +2,7 @@ package cn.houlinan.mylife.DTO;
 
 import cn.houlinan.mylife.entity.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 /**

@@ -1,5 +1,10 @@
 package cn.houlinan.mylife.service.kuaidi;
 
+import cn.houlinan.mylife.DTO.ExpressDTO;
+import cn.houlinan.mylife.DTO.TracesDTO;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
@@ -11,7 +16,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +28,7 @@ import java.util.Map;
  * Time : 12:39
  */
 @Service
+@Slf4j
 public class QueryKuaiDiByNumberService {
 
     @Value("${kuaidiniao.EBusinessID}")
@@ -71,9 +79,17 @@ public class QueryKuaiDiByNumberService {
 
         String result=sendPost(ReqURL, params);
 
+        log.info("查询快递的结果为:" + JSONUtil.formatJsonStr(result));
+        ExpressDTO expressDTO = JSONUtil.toBean(result, ExpressDTO.class);
+        List<TracesDTO> traces = expressDTO.getTraces();
+        if(traces.size() != 0 ){
+            Collections.reverse(traces);
+            expressDTO.setTraces(traces);
+        }
+
         //根据公司业务处理返回的信息......
 
-        return result;
+        return JSONObject.fromObject(expressDTO).toString();
     }
 
     /**

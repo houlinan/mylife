@@ -145,6 +145,12 @@ public class WCMUtilsController {
         return "formatParam";
     }
 
+    //通过controller返回html界面
+    @RequestMapping("/sqlAddComment")
+    public String sqlAddComment() {
+        return "sqlAddComment";
+    }
+
 
     @RequestMapping("/getAllParam")
     @ResponseBody
@@ -208,5 +214,21 @@ public class WCMUtilsController {
         return jsonForMatStr.toString();
     }
 
+    @RequestMapping("/sqlAddCommment1")
+    @ResponseBody
+    public HHJSONResult sqlAddCommment1(@RequestParam(name = "data" , required = false) String data  ,
+                                      @RequestParam(name = "tableName" , defaultValue = "playboy@163.com" )String tableName) {
 
+        String[] split = data.split("\n");
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < split.length; i++) {
+            String  s =  split[i];
+            if(s.endsWith(",")){
+                s = s.substring(0 , s.length()-1);
+            }
+            result.append( "ALTER TABLE "+tableName+" MODIFY COLUMN " + s + " COMMENT '';\n" );
+        }
+        log.info(data);
+        return HHJSONResult.ok(result);
+    }
 }

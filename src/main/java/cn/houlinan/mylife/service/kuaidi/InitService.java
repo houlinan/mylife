@@ -3,6 +3,7 @@ package cn.houlinan.mylife.service.kuaidi;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Map;
 @Component
 public class InitService {
 
-    public static  Map<String , String > KuaiDiCodeMap = new HashMap<>();
+    public static  Map<String , String > KuaiDiCodeMap = new LinkedHashMap<>();
 
     public InitService(){
         init();
