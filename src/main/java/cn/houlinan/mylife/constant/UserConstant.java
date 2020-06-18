@@ -1,10 +1,6 @@
 package cn.houlinan.mylife.constant;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -28,17 +24,12 @@ public class UserConstant {
 
     public static final int USER_LOGIN_TYPE_GELUOMI = 1 ;
 
-    public static  final  int USER_TYPE_ADMIN = 9 ;
-
-    public static  final  int USER_TYPE_TEAMADMIN = 1 ;
-
-    public static final int USER_TYPE_DEFAULT = 0 ;
 
     public static Map<String , Integer> getUserTypeMap(){
         Map<String , Integer > result = new LinkedHashMap<>( );
-        result.put("普通用户" ,USER_TYPE_DEFAULT ) ;
-        result.put("小组管理员" ,USER_TYPE_TEAMADMIN ) ;
-        result.put("超级管理员" ,USER_TYPE_ADMIN ) ;
+        result.put( UserTypeEnum.USER_TYPE_DEFAULT.getName()  , UserTypeEnum.USER_TYPE_DEFAULT.getValue() ) ;
+        result.put(UserTypeEnum.USER_TYPE_TEAMADMIN.getName() , UserTypeEnum.USER_TYPE_TEAMADMIN.getValue()) ;
+        result.put(UserTypeEnum.USER_TYPE_ADMIN.getName() , UserTypeEnum.USER_TYPE_ADMIN.getValue()) ;
 
         return result ;
     }

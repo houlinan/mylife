@@ -1,13 +1,16 @@
 package cn.houlinan.mylife.controller;
 
+import cn.houlinan.mylife.service.SqlService;
 import cn.houlinan.mylife.utils.RedisOperator;
 import cn.houlinan.mylife.utils.WechatMessageSendUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashSet;
@@ -27,6 +30,10 @@ public class Test {
 
     @Autowired
     RedisOperator redisOperator;
+
+    @Autowired
+    SqlService sqlService ;
+
 
     @RequestMapping("/redis/set")
     public void testSet(){

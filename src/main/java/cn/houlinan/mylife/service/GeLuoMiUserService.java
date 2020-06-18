@@ -1,6 +1,6 @@
 package cn.houlinan.mylife.service;
 
-import cn.houlinan.mylife.constant.UserConstant;
+import cn.houlinan.mylife.constant.UserTypeEnum;
 import cn.houlinan.mylife.entity.GeLuoMiUser;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.GeLuoMiUserRepository;
@@ -38,14 +38,14 @@ public class GeLuoMiUserService {
         if(CMyString.isEmpty(id))
             geLuoMiUser.setId(sid.nextShort());
 
-        if("admin".equals(geLuoMiUser.getUserName()))geLuoMiUser.setUserType(UserConstant.USER_TYPE_ADMIN);
+        if("admin".equals(geLuoMiUser.getUserName()))geLuoMiUser.setUserType(UserTypeEnum.USER_TYPE_ADMIN.getValue());
 
         geLuoMiUserRepository.save(geLuoMiUser);
 
         User user = new User( );
 
         BeanUtils.copyProperties(geLuoMiUser , user);
-        if("admin".equals(geLuoMiUser.getUserName())) user.setUserType(UserConstant.USER_TYPE_ADMIN);
+        if("admin".equals(geLuoMiUser.getUserName())) user.setUserType(UserTypeEnum.USER_TYPE_ADMIN.getValue());
         userRepository.save(user);
 
         return geLuoMiUser ;

@@ -62,17 +62,19 @@ public class WechatDocController {
         JSONObject result = JSONObject.fromObject(s);
 
         try{
-                JSONArray jsonArray = result.getJSONArray("item").
-                        getJSONObject(0).getJSONObject("content").getJSONArray("news_item");
-
-                List<WechatDocument> documentList = new LinkedList<>();
-                for (int i = 0; i < jsonArray.size(); i++) {
-                    String  o =  jsonArray.getString(i);
+            List<WechatDocument> documentList = new LinkedList<>();
+            JSONArray jsonArray = result.getJSONArray("item");
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject currItem =  jsonArray.getJSONObject(i);
+                JSONArray jsonArray1 = currItem.getJSONObject("content").getJSONArray("news_item");
+                for (int a = 0; a < jsonArray1.size(); a++) {
+                    String  o =  jsonArray1.getString(a);
                     WechatDocument wechatDocument = JSONUtil.toBean(o, WechatDocument.class);
 //                    wechatDocument.setContent();
                     documentList.add(wechatDocument);
                 }
-                return HHJSONResult.ok(documentList);
+            }
+            return HHJSONResult.ok(documentList);
         }catch (Exception e){
 
         }

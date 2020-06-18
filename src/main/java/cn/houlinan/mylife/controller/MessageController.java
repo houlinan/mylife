@@ -1,8 +1,8 @@
 package cn.houlinan.mylife.controller;
 
-import ch.qos.logback.classic.Logger;
 import cn.houlinan.mylife.constant.CommentConstant;
 import cn.houlinan.mylife.constant.UserConstant;
+import cn.houlinan.mylife.constant.UserTypeEnum;
 import cn.houlinan.mylife.entity.Comment;
 import cn.houlinan.mylife.entity.User;
 import cn.houlinan.mylife.entity.primary.repository.CommentRepository;
@@ -98,7 +98,7 @@ public class MessageController {
                 commentRepository.save(comment);
                 log.info("保存评论【{}】成功：请查收" ,comment.getId());
 
-                if(userByOpenId.getUserType() != UserConstant.USER_TYPE_ADMIN)
+                if(userByOpenId.getUserType() != UserTypeEnum.USER_TYPE_ADMIN.getValue())
                     redisOperator.set(UserConstant.RESET_USER_ERROR_TIME + ":" + userByOpenId.getId() ,
                             (Integer.valueOf(redisOperator.get(UserConstant.RESET_USER_ERROR_TIME + ":" + userByOpenId.getId())) +1) + "");
             }
@@ -154,7 +154,7 @@ public class MessageController {
     @ApiOperation(value = "查询发送给admin超管的信息", notes = "查询发送给admin超管的信息   ")
     public HHJSONResult queryAdminMessage(User user){
         if(user == null ) return HHJSONResult.errorMsg("您未登录");
-        if(user.getUserType() != UserConstant.USER_TYPE_ADMIN) return HHJSONResult.errorMsg("您没有权限处理此操作");
+        if(user.getUserType() != UserTypeEnum.USER_TYPE_ADMIN.getValue()) return HHJSONResult.errorMsg("您没有权限处理此操作");
         List<Comment> queryResultComment = commentRepository.findCommentsByParentIdAndMessageTypeAndProductIdAndHasProcessed(
                 "", CommentConstant.COMMENT_TYPE_SUGGESTIONS, CommentConstant.COMMENT_PRODUCT_TYPE_GELUOMI,
                 CommentConstant.COMMENT_HAH_PROCESSED_FALSE);
@@ -178,7 +178,7 @@ public class MessageController {
                                          @RequestParam(name = "data" , required = false ) String data ,
                                          @RequestParam(name = "commentId" , required = false )String commentId ){
         if(user == null ) return HHJSONResult.errorMsg("您未登录");
-        if(user.getUserType() != UserConstant.USER_TYPE_ADMIN) return HHJSONResult.errorMsg("您没有权限处理此操作");
+        if(user.getUserType() != UserTypeEnum.USER_TYPE_ADMIN.getValue()) return HHJSONResult.errorMsg("您没有权限处理此操作");
 
         if(CMyString.isEmpty(data)) return HHJSONResult.errorMsg("回复内容为空");
 
@@ -211,7 +211,7 @@ public class MessageController {
                                          @RequestParam(name = "commentId" , required = false )String commentId ) {
 
         if(user == null ) return HHJSONResult.errorMsg("您未登录");
-        if(user.getUserType() != UserConstant.USER_TYPE_ADMIN) return HHJSONResult.errorMsg("您没有权限处理此操作");
+        if(user.getUserType() != UserTypeEnum.USER_TYPE_ADMIN.getValue()) return HHJSONResult.errorMsg("您没有权限处理此操作");
 
 
         Comment commentById = commentRepository.findCommentById(commentId);

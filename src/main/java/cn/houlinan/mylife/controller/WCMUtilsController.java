@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DESC：
@@ -34,20 +36,20 @@ import java.util.Enumeration;
 public class WCMUtilsController {
 
     @Value("${wcm.forward.address}")
-    private String wcmAddress ;
+    private String wcmAddress;
 
     @RequestMapping("/redirectToWcm")
-    public void redirectToWcm(HttpServletRequest request  , HttpServletResponse res )throws Exception{
+    public void redirectToWcm(HttpServletRequest request, HttpServletResponse res) throws Exception {
 
-        StringBuffer result = new StringBuffer( wcmAddress+ "NewMediaPlatform/common/register?" );
+        StringBuffer result = new StringBuffer(wcmAddress + "NewMediaPlatform/common/register?");
 
         Enumeration enu = request.getParameterNames();
         while (enu.hasMoreElements()) {
             String paraName = (String) enu.nextElement();
             result.append(paraName).append("=").append(request.getParameter(paraName)).append("&");
         }
-        if(result.toString().endsWith("&"))
-            result.setLength(result.length()-1);
+        if (result.toString().endsWith("&"))
+            result.setLength(result.length() - 1);
 
 //        return "forward:/" + result.toString();
         res.setStatus(302);
@@ -56,32 +58,31 @@ public class WCMUtilsController {
 
     @RequestMapping("/createWCMTest")
     @ResponseBody
-    public HHJSONResult createWCMTest(@RequestParam(name = "data" , required = false) String data  ,
-                                      @RequestParam(name = "userName" , defaultValue = "playboy@163.com" )String userName) {
-
+    public HHJSONResult createWCMTest(@RequestParam(name = "data", required = false) String data,
+                                      @RequestParam(name = "userName", defaultValue = "playboy@163.com") String userName) {
 
 
         JSONObject format = GetParametersUtileByInput.format(data);
 //        String a = toPrettyFormat(format.toString()) ;
-        String newForMat =  StringEscapeUtils.escapeJson(format.toString());
+        String newForMat = StringEscapeUtils.escapeJson(format.toString());
 
         String methodname = "";
         String[] strsaa = data.split("\n");
         for (int i = 0; i < strsaa.length; i++) {
             Object o = strsaa[i];
             String[] strsa = o.toString().split(":");
-            if(!CMyString.isEmpty(strsa[0]) &&( "methodname".toUpperCase().equals(strsa[0]) || "methodname".equals(strsa[0]) )){
+            if (!CMyString.isEmpty(strsa[0]) && ("methodname".toUpperCase().equals(strsa[0]) || "methodname".equals(strsa[0]))) {
                 methodname = strsa[1].trim();
 
-                methodname = methodname.substring(0 , 1 ).toUpperCase()  + methodname.substring(1 , methodname.length());
+                methodname = methodname.substring(0, 1).toUpperCase() + methodname.substring(1, methodname.length());
 
 
-                String testStr = "public void test"+methodname.trim()+"() throws Exception {\n" +
+                String testStr = "public void test" + methodname.trim() + "() throws Exception {\n" +
 
                         "\t\tUser loginUser = User.findByName(\"" + userName + "\");\n" +
                         "\t\tContextHelper.clear();\n" +
                         "\t\tContextHelper.initContext(loginUser);\n" +
-                        "\t\tString str =\n\n\n\t\t\"" +newForMat + "\";\n\n\n\n"+
+                        "\t\tString str =\n\n\n\t\t\"" + newForMat + "\";\n\n\n\n" +
                         "\t\tJSONObject jsonObject = JSONObject.fromObject(str);\n" +
                         "\t\tMap<String, String> mapJson = JSONObject.fromObject(jsonObject);\n" +
                         "\t\tHashMap hParameters = new HashMap<>();\n" +
@@ -104,6 +105,7 @@ public class WCMUtilsController {
 
         return HHJSONResult.errorMsg("错误了");
     }
+
     public static String toPrettyFormat(String json) {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
@@ -216,19 +218,58 @@ public class WCMUtilsController {
 
     @RequestMapping("/sqlAddCommment1")
     @ResponseBody
-    public HHJSONResult sqlAddCommment1(@RequestParam(name = "data" , required = false) String data  ,
-                                      @RequestParam(name = "tableName" , defaultValue = "playboy@163.com" )String tableName) {
+    public HHJSONResult sqlAddCommment1(@RequestParam(name = "data", required = false) String data,
+                                        @RequestParam(name = "tableName", defaultValue = "playboy@163.com") String tableName) {
 
         String[] split = data.split("\n");
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < split.length; i++) {
-            String  s =  split[i];
-            if(s.endsWith(",")){
-                s = s.substring(0 , s.length()-1);
+            String s = split[i];
+            if (s.endsWith(",")) {
+                s = s.substring(0, s.length() - 1);
             }
-            result.append( "ALTER TABLE "+tableName+" MODIFY COLUMN " + s + " COMMENT '';\n" );
+            String field = s.substring(s.indexOf("`") + 1, s.lastIndexOf("`"));
+            String comment = "";
+            String fieldValue = getFieldValue(field);
+            if (!CMyString.isEmpty(fieldValue)) comment = fieldValue;
+            result.append("ALTER TABLE " + tableName + " MODIFY COLUMN " + s);
+            if (!s.contains("COMMENT")) {
+                result.append(" COMMENT '" + comment + "'");
+            }
+            result.append(" ;\n");
         }
         log.info(data);
         return HHJSONResult.ok(result);
     }
+
+
+    private String getFieldValue(String name) {
+
+        Map<String, String> map = new HashMap();
+        map.put("crtime".toUpperCase(), "创建时间");
+        map.put("cruser".toUpperCase(), "创建人");
+        map.put("tenantId".toUpperCase(), "租户id");
+        map.put("CHANNELID".toUpperCase(), "栏目id");
+        map.put("metadataid".toUpperCase(), "元数据id");
+        map.put("userId".toUpperCase(), "用户表主键id");
+        map.put("operType".toUpperCase(), "操作类型");
+        map.put("desc".toUpperCase(), "描述");
+        map.put("title".toUpperCase(), "标题");
+        map.put("content".toUpperCase(), "正文文本");
+        map.put("htmlcontent".toUpperCase(), "html文本");
+        map.put("docid".toUpperCase(), "稿件id");
+        map.put("DOCTITLE".toUpperCase(), "稿件标题");
+        map.put("FROMTYPE".toUpperCase(), "稿件来源");
+        map.put("ATTRIBUTE".toUpperCase(), "拓展属性");
+        map.put("OBJID".toUpperCase(), "对象id");
+        map.put("OBJTYPE".toUpperCase(), "对象类型");
+        map.put("FILENAME".toUpperCase(), "文件名称");
+        map.put("SITEID".toUpperCase(), "站点id");
+        map.put("MediaType".toUpperCase(), "媒体渠道类型");
+        map.put("CHNLDESC".toUpperCase(), "栏目描述");
+        map.put("STATUS".toUpperCase(), "状态");
+        map.put("DOCTYPE".toUpperCase(), "稿件类型");
+        return map.get(name.toUpperCase());
+    }
+
 }

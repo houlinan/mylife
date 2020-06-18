@@ -45,4 +45,6 @@ public class Tess4jUtil {
 //    public static void main(String[] args) {
 //        testTess4j("C:\\Users\\houlinan\\Desktop\\123.jpg");
 //    }
+
+
 }
