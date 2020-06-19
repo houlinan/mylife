@@ -14,12 +14,20 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.stream.FileImageInputStream;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -272,4 +280,38 @@ public class WCMUtilsController {
         return map.get(name.toUpperCase());
     }
 
+
+    @RequestMapping("/downNetWorkImgUtil")
+    public static void downNetWorkImgUtil(HttpServletResponse response, String imgPath) throws Exception {
+
+        try {
+            URL url = new URL(imgPath);
+            DataInputStream dataInputStream = new DataInputStream(url.openStream());
+
+            OutputStream fileOutputStream = response.getOutputStream();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+            response.reset();
+            response.setContentType("application/octet-stream");
+            response.setCharacterEncoding("UTF-8");
+
+            response.setHeader("Content-disposition", "attachment; filename=" + (imgPath.substring(imgPath.lastIndexOf("/") + 1, imgPath.length())));
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            while ((length = dataInputStream.read(buffer)) > 0) {
+                output.write(buffer, 0, length);
+            }
+            byte[] context = output.toByteArray();
+            fileOutputStream.write(output.toByteArray());
+            dataInputStream.close();
+            fileOutputStream.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
