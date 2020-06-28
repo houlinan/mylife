@@ -31,7 +31,7 @@ public class SchedulerTask {
         //零点重置用户错误次数
         resetUserErrorTimeService.ResetUserErrorTime();
         //备份数据库
-        DatabaseBackup.backup();
+//        DatabaseBackup.backup();
     }
 
 }

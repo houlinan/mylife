@@ -1,6 +1,5 @@
 package cn.houlinan.mylife.thread.concurrency.chapter1;
 
-import sun.plugin2.message.Message;
 
 /**
  * DESC：
