@@ -60,8 +60,16 @@ public class Utils {
 
     public static void main(String[] args) {
         // 2013-12-25 00:00:00.000
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Timestamp(midnightMillis())));
-        System.out.println(encode(281474976710655L));
+//        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Timestamp(midnightMillis())));
+//        System.out.println(encode(281474976710655L));
+        System.out.println(getTitle("这里是一个很长的标题，标题有啥"));
+    }
+    public static String getTitle (String content) {
+
+        if(content.length() >= 15){
+            content = content.substring(0 , 15) + "...";
+        }
+        return content ;
     }
 
     public static long decode(String s, String symbols) {

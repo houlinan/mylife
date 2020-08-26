@@ -1,8 +1,10 @@
 package cn.houlinan.mylife.service;
 
+import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.util.Date;
 
 /**
  * DESC：
@@ -20,7 +22,7 @@ public class DatabaseBackup {
 
             // 调用 调用mysql的安装目录的命令
             Process child = rt
-                    .exec("C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump -h localhost -uroot -pf6vxg29gkhI mylife");
+                    .exec("C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysqldump -h 106.13.43.74 -uroot -pf6vxg29gkhI mylife");
             // 设置导出编码为utf-8。这里必须是utf-8
             // 把进程执行中的控制台输出信息写入.sql文件，即生成了备份文件。注：如果不对控制台信息进行读出，则会导致进程堵塞无法运行
             InputStream in = child.getInputStream();// 控制台的输出信息作为输入流
@@ -39,7 +41,7 @@ public class DatabaseBackup {
             outStr = sb.toString();
 
             // 要用来做导入用的sql目标文件：
-            FileOutputStream fout = new FileOutputStream("c:\\mylife.sql");
+            FileOutputStream fout = new FileOutputStream("c:\\mylife-" + DateUtil.formatDateTime(new Date()) + ".sql");
             OutputStreamWriter writer = new OutputStreamWriter(fout, "utf-8");
             writer.write(outStr);
             writer.flush();

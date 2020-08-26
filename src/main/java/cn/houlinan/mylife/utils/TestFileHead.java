@@ -116,6 +116,7 @@ public class TestFileHead {
             byte[] b = new byte[10];
             is.read(b, 0, b.length);
             String fileCode = bytesToHexString(b);
+            System.out.println(fileCode);
 
             Iterator<String> keyIter = FILE_TYPE_MAP.keySet().iterator();
             while (keyIter.hasNext()) {
@@ -136,10 +137,28 @@ public class TestFileHead {
     }
 
     public static void main(String[] args) throws Exception {
-//        String type = getFileType("C:\\Users\\houli\\Desktop\\Paper.doc");
-//        System.out.println("Except : " + type);
-//        System.out.println();
-        System.out.println(txt2String());
+        String type = getFileType("C:\\Users\\houlinan\\Desktop\\5e286f5970ef0ef773cce04f9ba38d16-sz_618.svg");
+        System.out.println("Except : " + type);
+        System.out.println();
+//        System.out.println(txt2String());
+//        System.out.println(getTargetStr("1&3;1'2<3>2/dsa%dsadsa=====/*/11231231211111 document 12131212 =script"));
+    }
+
+
+    public static String getTargetStr(String sourceStr1) {
+//		String sourceStr = sourceStr1.replaceAll("&", "&amp;");	//过滤字符&
+        String sourceStr = sourceStr1.replaceAll(";", "");		//过滤字符;
+        sourceStr = sourceStr.replaceAll("'", "");		//过滤字符'
+        sourceStr = sourceStr.replaceAll("<", "&lt;");	//过滤字符<
+        sourceStr = sourceStr.replaceAll(">", "&gt");	//过滤字符>
+        sourceStr = sourceStr.replaceAll("/", "");		//过滤字符/
+        sourceStr = sourceStr.replaceAll("%", "");		//过滤字符%
+        sourceStr = sourceStr.replaceAll("=", "");		//
+        sourceStr = sourceStr.replaceAll("document", "");		//
+        sourceStr = sourceStr.replaceAll("script", "");		//
+        sourceStr = sourceStr.replaceAll("eval", "");		//过滤字符=
+        String targetStr = sourceStr;
+        return targetStr;
     }
 
 
