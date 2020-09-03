@@ -1,17 +1,20 @@
 package cn.houlinan.mylife.controller;
 
 import cn.houlinan.mylife.constant.ConfigConstant;
+import cn.houlinan.mylife.constant.LinuxConstant;
 import cn.houlinan.mylife.entity.LinuxCommand;
 import cn.houlinan.mylife.entity.primary.repository.LinuxCommandRepository;
 import cn.houlinan.mylife.service.common.PrimaryBaseService;
 import cn.houlinan.mylife.utils.CMyString;
 import cn.houlinan.mylife.utils.HHJSONResult;
+import cn.houlinan.mylife.utils.RedisOperator;
 import cn.hutool.core.util.StrUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @className :LinuxController
@@ -43,6 +45,9 @@ public class LinuxController {
 
     @Autowired
     PrimaryBaseService primaryBaseService;
+
+    @Autowired
+    RedisOperator redisOperator ;
 
     @PostMapping("/addCommand")
     @ApiImplicitParams({
@@ -68,8 +73,10 @@ public class LinuxController {
                 .commValue(commandValue)
                 .title(commandTitle)
                 .build();
-        data.setId((UUID.randomUUID().toString()));
+//        data.setId((UUID.randomUUID().toString()));
         linuxCommandRepository.save(data);
+        //这里每次添加都将redis的覆盖一下 ，
+        redisOperator.set(LinuxConstant.LINUX_ALL_DATA_KEY  , JSONArray.fromObject(linuxCommandRepository.findAll()).toString());
         return HHJSONResult.ok(userName);
     }
     @RequestMapping("/getAll")
@@ -89,6 +96,11 @@ public class LinuxController {
                 e.printStackTrace();
             }
 
+        if(redisOperator.get(LinuxConstant.LINUX_ALL_DATA_KEY) != null ){
+            log.info("这里直接将redis中的数据拿出来给前端！！！！");
+            return HHJSONResult.ok(JSONArray.fromObject(redisOperator.get(LinuxConstant.LINUX_ALL_DATA_KEY)));
+        }
+
         return HHJSONResult.ok(linuxCommandRepository.findAll()) ;
 
     }
@@ -97,6 +109,25 @@ public class LinuxController {
     @RequestMapping("/linux")
     public String linuxPage() {
         return "linux";
+    }
+
+    //通过controller返回html界面
+    @RequestMapping("/zxzjform")
+    public String zxzjform() {
+        return "zxzjform";
+    }
+    //
+
+    //通过controller返回html界面
+    @RequestMapping("/cdyyform")
+    public String cdyyform() {
+        return "cdyyform";
+    }
+
+    //通过controller返回html界面
+    @RequestMapping("/zxtsform")
+    public String zxtsform() {
+        return "zxtsform";
     }
 
 }

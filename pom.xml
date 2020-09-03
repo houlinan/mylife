@@ -70,6 +70,11 @@
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 
         <dependency>
@@ -266,6 +271,18 @@
             </plugin>
 
         </plugins>
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/webapp/WEB-INF/jsp</directory>-->
+<!--                &lt;!&ndash;如果使用springboot自带的tomcat启动，则使用如下配置jsp路径&ndash;&gt;-->
+<!--                <targetPath>META-INF/resources</targetPath>-->
+<!--                &lt;!&ndash;如果使用maven启动本地tomcat启动，则使用如下配置&ndash;&gt;-->
+<!--                &lt;!&ndash;<targetPath>/WEB-INF/jsp</targetPath>&ndash;&gt;-->
+<!--                <includes>-->
+<!--                    <include>**/*.*</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
+<!--        </resources>-->
     </build>
 
     <repositories>

@@ -1,5 +1,7 @@
 package cn.houlinan.mylife.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,9 +27,9 @@ import javax.persistence.*;
 public class LinuxCommand  {
 
     @Id
-    @Column(name = "id" ,length = 64)
-    @ApiModelProperty(value = "主键ID" , hidden = true )
-    private String id ;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonSerialize(using= ToStringSerializer.class)
+    private int id ;
 
     @ApiModelProperty(value = "主标题" , name = "title" , example = "1")
     @Column(name = "title", length = 100 )
